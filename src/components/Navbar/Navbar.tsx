@@ -1,0 +1,151 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
+export interface NavbarProps {
+  tipo: 'home' | 'dashboard';
+  titulo?: string;
+  mostrarUsuario?: boolean;
+  mostrarConfiguracion?: boolean;
+  mostrarCerrarSesion?: boolean;
+  onCerrarSesion?: () => void;
+  isCargandoLogout?: boolean;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  tipo,
+  titulo = 'PatitasQueAyudan',
+  mostrarUsuario = true,
+  mostrarConfiguracion = true,
+  mostrarCerrarSesion = true,
+  onCerrarSesion,
+  isCargandoLogout = false,
+}) => {
+  const navigate = useNavigate();
+  const { usuario } = useAuth();
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
+  // Función por defecto para cerrar sesión si no se proporciona
+  const handleCerrarSesion = async () => {
+    if (onCerrarSesion) {
+      await onCerrarSesion();
+    } else {
+      try {
+        navigate('/login');
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+      }
+    }
+  };
+
+  // Navbar para home
+  if (tipo === 'home') {
+    return (
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm shadow-lg p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          {/* Logo y título */}
+          <Link to="/about" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
+            <div className="h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+              <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+              {titulo}
+            </h1>
+          </Link>
+          {/* Botón hamburguesa */}
+          <button
+            className="sm:hidden flex items-center px-3 py-2 border rounded text-orange-600 border-orange-400"
+            onClick={() => setMenuAbierto(!menuAbierto)}
+            aria-label="Abrir menú"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          {/* Menú links */}
+          <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white/95 sm:bg-transparent shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+            <Link 
+              to="/login" 
+              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2"
+              onClick={() => setMenuAbierto(false)}
+            >
+              Iniciar Sesión
+            </Link>
+            <Link 
+              to="/register" 
+              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              onClick={() => setMenuAbierto(false)}
+            >
+              Registrarse
+            </Link>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
+  // Navbar para dashboard (usuario autenticado)
+  return (
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm shadow-sm p-4 border-b border-orange-100">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo y título */}
+        <Link to="/about" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
+          <div className="h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{titulo}</h1>
+        </Link>
+        {/* Botón hamburguesa */}
+        <button
+          className="sm:hidden flex items-center px-3 py-2 border rounded text-orange-600 border-orange-400"
+          onClick={() => setMenuAbierto(!menuAbierto)}
+          aria-label="Abrir menú"
+        >
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        {/* Menú links */}
+        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white/95 sm:bg-transparent shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+          {mostrarUsuario && (
+            <span className="text-sm text-gray-600 px-4 py-2 sm:block">
+              Hola, {usuario?.displayName || usuario?.email}
+            </span>
+          )}
+          {mostrarConfiguracion && (
+            <Link 
+              to="/settings" 
+              className="text-gray-600 hover:text-orange-600 transition-colors duration-200 text-sm px-4 py-2"
+              onClick={() => setMenuAbierto(false)}
+            >
+              Configuración
+            </Link>
+          )}
+          {mostrarCerrarSesion && (
+            <button 
+              onClick={handleCerrarSesion}
+              disabled={isCargandoLogout}
+              className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm transition-colors duration-200 px-4 py-2"
+            >
+              {isCargandoLogout ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Cerrando...
+                </>
+              ) : (
+                'Cerrar Sesión'
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}; 
