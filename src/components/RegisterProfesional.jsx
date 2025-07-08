@@ -30,7 +30,7 @@ const RegisterProfesional = () => {
   // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAutenticado) {
-      navigate('/dashboard-profesional');
+      navigate('/dashboardProfesional');
     }
   }, [isAutenticado, navigate]);
 
@@ -84,7 +84,7 @@ const RegisterProfesional = () => {
       });
 
       console.log('Profesional registrado exitosamente:', userCredential.user);
-      navigate('/dashboard-profesional');
+      navigate('/dashboardProfesional');
       
     } catch (error) {
       console.error('Error al registrar profesional:', error);

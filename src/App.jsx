@@ -41,7 +41,7 @@ function App() {
                   <Dashboard />
                 </ProtectedRoute>
               } />
-              <Route path="/dashboard-profesional" element={
+              <Route path="/dashboardProfesional" element={
                 <ProtectedRouteProfesional>
                   <DashboardProfesional />
                 </ProtectedRouteProfesional>
