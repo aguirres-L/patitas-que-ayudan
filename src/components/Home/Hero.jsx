@@ -1,17 +1,24 @@
+import SliderHome from "./slider/SliderHome";
+
 export default function Hero(){
     return(
-        <section className="relative container mx-auto py-16 mt-10 px-4 text-center">
+        <section className="relative container mx-auto py-12 mt-6 px-4 text-center">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-            Al darle seguridad a tu mascota,{' '}
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800  leading-tight">
+            Protege a tu mascota y{' '}
             <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-              le das una segunda oportunidad
+              ayuda a rescatar
             </span>{' '}
-            a una mascota perdida
+            a otras mascotas perdidas
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+          {/* <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
             Chapitas de acero grabadas con láser que protegen a tu mejor amigo y ayudan a rescatar animales en situación de calle
-          </p>
+          </p> */}
+
+          
+          <SliderHome/>
+
+
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
             <a 
               href="/register" 
