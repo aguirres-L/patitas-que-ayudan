@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
+// imagenes macotas 
+import uno from "../../../assets/7.png"
+import dos from "../../../assets/8.png"
+import tres from "../../../assets/9.png"
+import cuatro from "../../../assets/10.png"
+import cinco from "../../../assets/11.png"
+import seis from "../../../assets/12.png"
+import siete from "../../../assets/13.png"
+import ocho from "../../../assets/14.png"
+import nueve from "../../../assets/15.png"
+
 
 // Importar imagenes
 import perro from '../../../assets/perros_.png'
@@ -9,7 +20,7 @@ import perro3 from '../../../assets/perros_3.png'
 import perro4 from '../../../assets/perros_4.png'
 
 // Importar imagenes
-const urlImages = [perro, perro1, perro2, perro3, perro4]
+const urlImages = [uno, cinco, dos, seis, tres, siete, cuatro, ocho, /* nueve */]
 const urlImages2 = [perro, perro1, perro2, perro3, perro4]
 const urlImages3= [perro, perro1, perro2, perro3, perro4]
 const urlImages4= [perro, perro1, perro2, perro3, perro4]
@@ -199,7 +210,7 @@ export default function SliderHome() {
             </button>
 
             {/* Indicadores de puntos - Solo en desktop para ahorrar espacio en móvil */}
-            <div className="hidden lg:block absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {/* <div className="hidden lg:block absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
               {datosSlides.map((_, index) => (
                 <button
                   key={index}
@@ -212,7 +223,7 @@ export default function SliderHome() {
                   aria-label={`Ir al slide ${index + 1}`}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

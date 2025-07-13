@@ -17,7 +17,7 @@ export default function Planes(){
               <ul className="space-y-3 text-left mb-8">
                                  <li className="flex items-center">
                    <span className="text-green-500 mr-2">✓</span>
-                   Chapita de acero grabada con láser
+                   Placa QR de acero grabada con láser
                  </li>
                 <li className="flex items-center">
                   <span className="text-green-500 mr-2">✓</span>
@@ -46,12 +46,9 @@ export default function Planes(){
               <ul className="space-y-3 text-left mb-8">
                                  <li className="flex items-center">
                    <span className="text-white mr-2">✓</span>
-                   Todo del plan básico + 50% de tu mensualidad donado
+                   50% de tu mensualidad donado a rescate animal
                  </li>
-                <li className="flex items-center">
-                  <span className="text-white mr-2">✓</span>
-                  Comunicación ilimitada
-                </li>
+               
                 <li className="flex items-center">
                   <span className="text-white mr-2">✓</span>
                   Historial completo

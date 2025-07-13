@@ -10,7 +10,7 @@ export default function Footer(){
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
               </div>
-              <h3 className="text-xl font-bold">PatitasQueAyudan</h3>
+              <h3 className="text-xl font-bold">Huellitas Seguras</h3>
             </div>
             
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -51,7 +51,7 @@ export default function Footer(){
               <div>
                 <h4 className="font-semibold mb-2 text-yellow-400">📞 Contacto</h4>
                 <p className="text-sm text-gray-400">
-                  info@patitasqueayudan.com<br/>
+                  info@Huellitas Seguras.com<br/>
                   ¿Tienes preguntas? ¡Escríbenos!
                 </p>
               </div>
@@ -61,7 +61,7 @@ export default function Footer(){
           {/* Copyright */}
           <div className="border-t border-gray-700 pt-6 mt-8 text-center">
             <p className="text-xs text-gray-500">
-              © 2024 PatitasQueAyudan. Todos los derechos reservados. 
+              © 2024 Huellitas Seguras. Todos los derechos reservados. 
               Haciendo del mundo un lugar mejor para las mascotas.
             </p>
           </div>

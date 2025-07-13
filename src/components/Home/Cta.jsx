@@ -6,7 +6,7 @@ export default function Cta(){
             ¿Listo para proteger a tu mascota y ayudar a otras?
           </h2>
           <p className="text-xl md:text-2xl mb-8 leading-relaxed opacity-90">
-            Cada peso que inviertes en PatitasQueAyudan no solo protege a tu mejor amigo, sino que también da esperanza a una mascota que necesita un hogar
+            Cada peso que inviertes en Huellitas Seguras no solo protege a tu mejor amigo, sino que también da esperanza a una mascota que necesita un hogar
           </p>
           <a 
             href="/register" 

@@ -29,6 +29,8 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    // Habilitar acceso desde la red local
+    host: '0.0.0.0',
     // Configuración para SPA en desarrollo
     historyApiFallback: true
   },

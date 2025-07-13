@@ -6,7 +6,7 @@ import { FormularioCitaVeterinaria } from './FormularioCitaVeterinaria';
 import { FormularioCitaPeluqueria } from './FormularioCitaPeluqueria';
 import Peluquerias from './Peluquerias';
 import Veterinarias from './Veterinarias';
-import { agregarMascotaAUsuario, obtenerUsuarioPorUid, obtenerProfesionalesPorTipo } from '../data/firebase/firebase';
+import { agregarMascotaAUsuario, obtenerUsuarioPorUid, obtenerProfesionalesPorTipo, eliminarCita, actualizarCita } from '../data/firebase/firebase';
 import { FormularioMascota } from './FormularioMascota';
 
 const Dashboard = () => {
@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [peluqueros, setPeluqueros] = useState([]);
   const [isCargandoVeterinarios, setIsCargandoVeterinarios] = useState(false);
   const [isCargandoPeluqueros, setIsCargandoPeluqueros] = useState(false);
+  const [citasCancelando, setCitasCancelando] = useState(new Set()); // Para controlar qué citas se están cancelando
 
   // Datos simulados de mascotas del usuario
   const mascotasUsuario = [
@@ -159,6 +160,47 @@ const Dashboard = () => {
   useEffect(() => {
     cargarDatosUsuario();
   }, [usuario?.uid]);
+
+  // Función para cancelar una cita
+  const handleCancelarCita = async (cita) => {
+    if (!confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
+      return;
+    }
+
+    // Agregar la cita al set de citas cancelando
+    setCitasCancelando(prev => new Set(prev).add(cita.id));
+
+    try {
+      if (cita.id) {
+        // Si la cita tiene un ID de Firebase, la eliminamos directamente
+        await eliminarCita(cita.id);
+        console.log('Cita eliminada de Firebase:', cita.id);
+      } else {
+        // Si no tiene ID (cita local), la marcamos como cancelada
+        await actualizarCita(cita.id || Date.now().toString(), {
+          ...cita,
+          estado: 'cancelada',
+          fechaCancelacion: new Date()
+        });
+        console.log('Cita marcada como cancelada:', cita);
+      }
+
+      // Recargar datos del usuario para actualizar la UI
+      await cargarDatosUsuario();
+      
+      alert('Cita cancelada exitosamente');
+    } catch (error) {
+      console.error('Error al cancelar cita:', error);
+      alert('Error al cancelar la cita. Inténtalo de nuevo.');
+    } finally {
+      // Remover la cita del set de citas cancelando
+      setCitasCancelando(prev => {
+        const nuevoSet = new Set(prev);
+        nuevoSet.delete(cita.id);
+        return nuevoSet;
+      });
+    }
+  };
 
   // Función para agregar mascota usando la función centralizada
   const handleAgregarMascota = async (mascota) => {
@@ -405,17 +447,15 @@ const Dashboard = () => {
                             </Link>
                           )}
                           <button 
-                            className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors duration-200"
-                            onClick={() => {
-                              // Aquí puedes agregar lógica para cancelar la cita
-                              console.log('Cancelar cita:', cita);
-                              if (confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
-                                // Lógica para cancelar cita
-                                alert('Cita cancelada');
-                              }
-                            }}
+                            className={`px-3 py-1 rounded text-xs transition-colors duration-200 ${
+                              citasCancelando.has(cita.id) 
+                                ? 'bg-gray-400 text-white cursor-not-allowed' 
+                                : 'bg-red-500 text-white hover:bg-red-600'
+                            }`}
+                            onClick={() => handleCancelarCita(cita)}
+                            disabled={citasCancelando.has(cita.id)}
                           >
-                            Cancelar
+                            {citasCancelando.has(cita.id) ? 'Cancelando...' : 'Cancelar'}
                           </button>
                         </div>
                       </div>

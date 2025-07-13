@@ -15,7 +15,7 @@ export interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   tipo,
-  titulo = 'PatitasQueAyudan',
+  titulo = 'Huellitas Seguras',
   mostrarUsuario = true,
   mostrarConfiguracion = true,
   mostrarCerrarSesion = true,

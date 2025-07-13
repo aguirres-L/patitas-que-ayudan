@@ -13,11 +13,11 @@ const About = () => {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-              PatitasQueAyudan
+            <h1 className="text-2xl  font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+              Huellitas Seguras
             </h1>
           </div>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4 mt-10">
             Más que una plataforma de servicios veterinarios y de peluquería. 
             Somos un movimiento solidario que conecta el cuidado de mascotas con el rescate de animales.
           </p>
@@ -27,36 +27,16 @@ const About = () => {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
           <div className="prose max-w-none">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
-              Nuestra Misión Solidaria
+              Nuestro Objetivo
             </h2>
             
             <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-              En <strong>PatitasQueAyudan</strong>, creemos que cada mascota merece una vida digna. 
+              En <strong>Huellitas Seguras</strong>, creemos que cada mascota merece una vida digna. 
               Por eso, hemos creado un modelo de negocio único donde <span className="font-bold text-orange-600">el 50% de todos nuestros ingresos </span>             se destina directamente a fundaciones que rescatan y rehabilitan mascotas en situación de calle.
             </p>
 
             {/* Modelo de impacto */}
-            <div className="bg-gradient-to-r from-orange-100 to-pink-100 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">¿Cómo funciona nuestro impacto?</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl mb-3">🦮</div>
-                  <h4 className="font-semibold mb-2 text-sm sm:text-base">Chapitas Solidarias</h4>
-                  <p className="text-xs sm:text-sm text-gray-600">Cada chapita que vendemos financia rescates y rehabilitación</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl mb-3">💊</div>
-                  <h4 className="font-semibold mb-2 text-sm sm:text-base">Servicios Profesionales</h4>
-                  <p className="text-xs sm:text-sm text-gray-600">Las mensualidades de veterinarios y peluqueros generan donaciones</p>
-                </div>
-                <div className="text-center sm:col-span-2 lg:col-span-1">
-                  <div className="text-3xl sm:text-4xl mb-3">🏥</div>
-                  <h4 className="font-semibold mb-2 text-sm sm:text-base">Fundaciones Rescatistas</h4>
-                  <p className="text-xs sm:text-sm text-gray-600">El 50% se distribuye entre organizaciones verificadas</p>
-                </div>
-              </div>
-            </div>
-
+         
             <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">Nuestros Servicios</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
@@ -114,7 +94,7 @@ const About = () => {
 
             {/* Impacto social detallado */}
             <div className="bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
-              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Nuestro Compromiso Social</h3>
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Nuestro Objetivo</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                 <div>
                   <h4 className="text-lg sm:text-xl font-semibold mb-3">🐾 Rescate y Rehabilitación</h4>
@@ -187,7 +167,7 @@ const About = () => {
                   Registrarse Ahora
                 </a>
                 <a 
-                  href="mailto:info@patitasqueayudan.com" 
+                  href="mailto:info@Huellitas Seguras.com" 
                   className="inline-block bg-gray-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-700 transition-all duration-200 text-sm sm:text-base"
                 >
                   Contactar
@@ -208,8 +188,8 @@ const About = () => {
               </p>
               <p className="text-gray-600 text-sm sm:text-base">
                 <strong>Email:</strong> 
-                <a href="mailto:info@patitasqueayudan.com" className="text-blue-500 hover:text-blue-600 ml-1">
-                  info@patitasqueayudan.com
+                <a href="mailto:info@Huellitas Seguras.com" className="text-blue-500 hover:text-blue-600 ml-1">
+                  info@Huellitas Seguras.com
                 </a>
               </p>
             </div>

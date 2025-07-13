@@ -60,7 +60,7 @@ const PetProfilePublic = () => {
             </svg>
           </div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-            PatitasQueAyudan
+            Huellitas Seguras
           </h1>
         </Link>
         {/* Botón hamburguesa */}

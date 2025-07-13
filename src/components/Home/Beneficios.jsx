@@ -18,19 +18,11 @@ export default function Beneficios(){
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  Acceso a perfiles de mascotas por chip
+                  Acceso a perfiles de mascotas por QR ID
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
                   Actualizar historial de vacunas
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Registrar tratamientos y medicamentos
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Actualizar información médica
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
@@ -51,19 +43,11 @@ export default function Beneficios(){
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  Acceso a perfiles de mascotas por chip
+                  Acceso a perfiles de mascotas por QR ID
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
                   Actualizar información de cuidados
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Registrar preferencias de grooming
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  Actualizar notas de comportamiento
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>

@@ -137,7 +137,7 @@ const Register = () => {
             </svg>
           </div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
-            PatitasQueAyudan
+            Huellitas Seguras
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 mb-2">
             Cuidando a tus mejores amigos
