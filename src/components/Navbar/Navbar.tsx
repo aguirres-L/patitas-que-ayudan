@@ -10,6 +10,7 @@ export interface NavbarProps {
   mostrarCerrarSesion?: boolean;
   onCerrarSesion?: () => void;
   isCargandoLogout?: boolean;
+  mostrarNavegacionInterna?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,6 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   mostrarCerrarSesion = true,
   onCerrarSesion,
   isCargandoLogout = false,
+  mostrarNavegacionInterna = false,
 }) => {
   const navigate = useNavigate();
   const { usuario } = useAuth();
@@ -36,6 +38,18 @@ export const Navbar: React.FC<NavbarProps> = ({
         console.error('Error al cerrar sesión:', error);
       }
     }
+  };
+
+  // Función para navegación interna suave
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    setMenuAbierto(false); // Cerrar menú móvil después de navegar
   };
 
   // Navbar para home
@@ -66,9 +80,38 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           {/* Menú links */}
           <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white/95 sm:bg-transparent shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+            {/* Navegación interna - solo visible en home */}
+            {mostrarNavegacionInterna && (
+              <>
+                <button 
+                  onClick={() => scrollToSection('how-it-works')}
+                  className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 text-sm border-b border-gray-100 sm:border-b-0"
+                >
+                  Cómo Funciona
+                </button>
+                <button 
+                  onClick={() => scrollToSection('impacto-social')}
+                  className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 text-sm border-b border-gray-100 sm:border-b-0"
+                >
+                  Impacto Social
+                </button>
+                <button 
+                  onClick={() => scrollToSection('beneficios')}
+                  className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 text-sm border-b border-gray-100 sm:border-b-0"
+                >
+                  Beneficios
+                </button>
+                <button 
+                  onClick={() => scrollToSection('planes')}
+                  className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 text-sm border-b border-gray-100 sm:border-b-0"
+                >
+                  Planes
+                </button>
+              </>
+            )}
             <Link 
               to="/login" 
-              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2"
+              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 border-b border-gray-100 sm:border-b-0"
               onClick={() => setMenuAbierto(false)}
             >
               Iniciar Sesión

@@ -109,7 +109,7 @@ const LoginProfesional = () => {
             Área Profesional
           </p>
           <h2 className="text-xl font-semibold text-gray-800">
-            Iniciar Sesión
+            Iniciar Sesión como profesional
           </h2>
         </div>
         

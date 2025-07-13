@@ -34,8 +34,8 @@ export default function Footer(){
           </div>
 
           {/* Información adicional */}
-          <div className="border-t border-gray-700 pt-8">
-            <div className="grid md:grid-cols-3 gap-6 text-center md:text-left">
+          <div className="border-t border-gray-700 pt-8 ">
+            <div className="grid md:grid-cols-3 gap-6 text-center ">
               <div>
                 <h4 className="font-semibold mb-2 text-orange-400">🐾 Nuestra Misión</h4>
                 <p className="text-sm text-gray-400">
@@ -43,7 +43,7 @@ export default function Footer(){
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2 text-pink-400">💝 Impacto Social</h4>
+                <h4 className="font-semibold mb-2 text-pink-400">💝 Ayuda </h4>
                 <p className="text-sm text-gray-400">
                   Cada chapita y servicio contribuye al rescate y rehabilitación de mascotas.
                 </p>

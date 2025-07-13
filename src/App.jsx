@@ -18,7 +18,7 @@ import About from './components/Home/About';
 
 function App() {
   return (
-    <Router>
+    <Router> 
       <Routes>
         {/* Rutas completamente públicas - fuera del AuthProvider */}
         <Route path="/pet/:id" element={<PetProfilePublic />} />

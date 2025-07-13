@@ -2,7 +2,7 @@ import SliderHome from "./slider/SliderHome";
 
 export default function Hero(){
     return(
-        <section className="relative container mx-auto py-12 mt-6 px-4 text-center">
+        <section className="relative container mx-auto md:py-20 py-12 mt-6 px-4 text-center">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800  leading-tight">
             Protege a tu mascota y{' '}
@@ -19,7 +19,7 @@ export default function Hero(){
           <SliderHome/>
 
 
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+          <div className="flex flex-col mt-10 sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
             <a 
               href="/register" 
               className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-8 py-4 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg font-semibold text-lg"
@@ -34,21 +34,66 @@ export default function Hero(){
             </a>
           </div>
           
-          {/* Enlaces para profesionales */}
-          <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-12">
-            <a 
-              href="/register-profesional" 
-              className="text-orange-600 hover:text-orange-700 transition-colors duration-200 font-medium"
-            >
-              ¿Eres veterinario o peluquero? Regístrate aquí
-            </a>
-            <span className="hidden sm:inline text-gray-400">•</span>
-            <a 
-              href="/login-profesional" 
-              className="text-orange-600 hover:text-orange-700 transition-colors duration-200 font-medium"
-            >
-              Acceso para profesionales
-            </a>
+          {/* Sección para profesionales - Más visible y atractiva */}
+          {/* <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mt-12 mb-8 border border-blue-100"> */}
+          <div className=" p-8 mt-12 mb-8 ">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+              ¿Eres profesional del cuidado de mascotas?
+            </h2>
+            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+              Únete a nuestra red de profesionales y ayuda a más mascotas a encontrar su hogar
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-2">🏥</div>
+                <h3 className="font-semibold text-gray-800 mb-2">Veterinarios</h3>
+                <p className="text-sm text-gray-600 mb-3">Ofrece servicios y ayuda a mascotas perdidas</p>
+                <a 
+                  href="/register-profesional" 
+                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors"
+                >
+                  Registrarse
+                </a>
+              </div>
+              
+              <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-2">✂️</div>
+                <h3 className="font-semibold text-gray-800 mb-2">Peluqueros</h3>
+                <p className="text-sm text-gray-600 mb-3">Cuida y embellece a las mascotas de la comunidad</p>
+                <a 
+                  href="/register-profesional" 
+                  className="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600 transition-colors"
+                >
+                  Registrarse
+                </a>
+              </div>
+              
+              <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-2">🛍️</div>
+                <h3 className="font-semibold text-gray-800 mb-2">Tiendas de Mascotas</h3>
+                <p className="text-sm text-gray-600 mb-3">Vende alimentos y accesorios para mascotas</p>
+                <a 
+                  href="/register-profesional" 
+                  className="inline-block bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-colors"
+                >
+                  Registrarse
+                </a>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-gray-600 mb-3">¿Ya tienes cuenta?</p>
+              <a 
+                href="/login-profesional" 
+                className="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold transition-colors"
+              >
+                <span>Acceder a mi panel profesional</span>
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
           </div>
           
                      {/* Precio destacado */}

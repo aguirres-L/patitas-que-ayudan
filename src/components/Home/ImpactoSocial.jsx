@@ -1,6 +1,6 @@
 export default function ImpactoSocial(){
     return(
-        <section className="relative bg-gradient-to-r from-orange-500 to-pink-500 text-white py-16 px-4">
+        <section id="impacto-social" className="relative bg-gradient-to-r from-orange-500 to-pink-500 text-white py-16 px-4">
         <div className="container mx-auto text-center max-w-4xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Tu chapita salva dos vidas

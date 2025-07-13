@@ -22,7 +22,7 @@ const datosSlides = [
     titulo: "Identidad para quien más quieres",
     descripcion: "Placas únicas grabadas con láser, donde el nombre y la silueta de tu mascota se convierten en arte.",
     caracteristicas: [
-      "Personalización exacta: Transformamos una foto de tu compañero en una ilustración grabada para siempre.",
+      "Personalización exacta: Transformamos una foto en una ilustración grabada para siempre.",
       "Durabilidad premium: Materiales resistentes a agua, sol y arañazos.",
       "Más que un accesorio: un tributo a su esencia."
     ],
@@ -32,35 +32,35 @@ const datosSlides = [
   {
     id: 2,
     titulo: "Reencuentros más rápidos, menos preocupaciones",
-    descripcion: "Cada placa incluye un código QR indestructible que dirige al perfil digital de tu mascota.",
+    descripcion: "Cada placa incluye un código QR indestructible que conecta al perfil digital de tu mascota.",
     caracteristicas: [
       "Datos vitales en crisis: Contacto del dueño y dirección.",
-      "Actualización instantánea: Modifica la información en segundos (sin cambiar la placa).",
-      "Tecnología que protege lo que amas."
+      "Actualización instantánea: Modifica la información en segundos sin cambiar la placa.",
+      "Tecnología que protege lo que más amas."
     ],
     imagenUrl: urlImages2,
     imagenAlt: "Persona escaneando QR de la placa"
   },
   {
     id: 3,
-    titulo: "Cuidado completo en una sola plataforma",
-    descripcion: "Acceso exclusivo para clientes:",
+    titulo: "Cuidado completo en una plataforma",
+    descripcion: "Acceso a nuestro sistema de citas con profesionales registrados en nuestra plataforma.",
     caracteristicas: [
-      "Agenda veterinaria: Reserva citas con especialistas verificados.",
+      "Agenda veterinaria: Reserva citas con especialistas registrados en nuestra plataforma.",
       "Ahorro garantizado: 5% de descuento en alimentos y accesorios.",
-      "Todo pensado para su bienestar (y tu tranquilidad)."
+      " Lleva el control de vacunas y consultas .",
     ],
     imagenUrl: urlImages3,
     imagenAlt: "App mostrando agenda de citas veterinarias"
   },
   {
     id: 4,
-    titulo: "Cuando ellos ganan, todos ganamos",
-    descripcion: "Elegir nuestras placas es sumarse a un círculo virtuoso:",
+    titulo: "Cuando ganan, todos ganamos",
+    descripcion: "Elegir nuestras placas es sumarse a un círculo virtuoso de ayuda.",
     caracteristicas: [
-      "Impacto colectivo: Parte de cada compra se transforma en ayuda para animales necesitados.",
-      "Comunidad que crece: Juntos hacemos que cada rastro lleve a casa.",
-      "Innovación con huella positiva."
+      "Impacto colectivo: Parte de cada compra se transforma en ayuda para animales.",
+      "Comunidad solidaria: Juntos hacemos que cada rastro lleve a casa.",
+      " Tu compra impulsa proyectos de bienestar animal."
     ],
     imagenUrl: urlImages4,
     imagenAlt: "Placa con huellas y símbolo de corazón"
@@ -117,12 +117,12 @@ export default function SliderHome() {
   const slideActualData = datosSlides[slideActual];
 
   return (
-    <section className="relative py-4 sm:py-6 lg:py-8">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative md:py-16  sm:py-6 lg:py-8">
+      <div   className="container mx-auto px-4 sm:px-6 lg:px-1">
         <div className="max-w-7xl mx-auto">
           {/* Título de la sección */}
-          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 sm:mb-3">
+          <div className="text-center mb-4 sm:mb-2 lg:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-6 sm:mb-3">
               ¿Por qué elegir nuestras chapitas?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
@@ -131,7 +131,7 @@ export default function SliderHome() {
           </div>
 
           {/* Contenedor del slider */}
-          <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
+          <div  className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
             <div className="flex flex-col lg:flex-row min-h-[400px] sm:min-h-[450px] lg:min-h-[500px]">
               {/* Imagen (izquierda en desktop, arriba en móvil) */}
               <div className="w-full lg:w-1/2 relative overflow-hidden">
@@ -180,7 +180,7 @@ export default function SliderHome() {
             {/* Botones de navegación - Responsivos */}
             <button
               onClick={slideAnterior}
-              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="absolute left-2 sm:left-10 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
               aria-label="Slide anterior"
             >
               <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

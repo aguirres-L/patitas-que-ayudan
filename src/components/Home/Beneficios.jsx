@@ -1,6 +1,6 @@
 export default function Beneficios(){
     return(
-        <section className="relative bg-gray-50 py-16 px-4">
+        <section id="beneficios" className="relative bg-gray-50 py-16 px-4">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Beneficios para profesionales
