@@ -15,6 +15,7 @@ const Register = () => {
     nombre: '', 
     email: '',
     telefono: '',
+    direccion: '',
     password: '',
     confirmPassword: ''
   });
@@ -66,6 +67,7 @@ const Register = () => {
         nombre: formData.nombre,
         email: formData.email,
         telefono: formData.telefono,
+        direccion: formData.direccion,
         rol: 'usuario', // Rol por defecto
         fechaRegistro: new Date()
       });
@@ -241,6 +243,33 @@ const Register = () => {
               </div>
             </div>
 
+            {/* Campo Dirección */}
+            <div className="relative">
+              <label htmlFor="direccion" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Dirección
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <input
+                  id="direccion"
+                  name="direccion"
+                  type="text"
+                  required
+                  className="appearance-none relative block w-full pl-7 sm:pl-8 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-lg transition-all duration-200 text-sm"
+                  placeholder="Tu dirección"
+                  value={formData.direccion}
+                  onChange={handleChange}
+                  disabled={isCargando}
+                />
+              </div>
+              </div>
+
+            
             {/* Campo Contraseña */}
             <div className="relative">
               <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">

@@ -8,9 +8,47 @@ import { auth, addDataWithCustomId } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
 
 // Este componente no recibe props
+
+// Array de objetos con datos y estilos de cada tipo de profesional
+const tiposProfesional = [
+  {
+    tipo: 'veterinario',
+    nombre: 'Veterinaria',
+    color: 'blue',
+    icono: (
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    ),
+    descripcion: 'Atención  Veterinaria'
+  },
+  {
+    tipo: 'peluquero',
+    nombre: 'Peluquería',
+    color: 'violet',
+    icono: (
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
+      </svg>
+    ),
+    descripcion: 'Corte y Baño'
+  },
+     {
+     tipo: 'tienda',
+     nombre: 'Tienda',
+     color: 'green',
+     icono: (
+       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+       </svg>
+     ),
+     descripcion: 'Alimentos y Accesorios'
+   }
+];
+
 const RegisterProfesional = () => {
   const navigate = useNavigate();
-  const { isAutenticado } = useAuth();
+  const { isAutenticado, tipoUsuario, isCargando } = useAuth();
   const [formData, setFormData] = useState({
     nombre: '', 
     email: '',
@@ -24,25 +62,25 @@ const RegisterProfesional = () => {
     experiencia: '',
     licencia: ''
   });
-  const [isCargando, setIsCargando] = useState(false);
+  const [isRegistrando, setIsRegistrando] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirigir si ya está autenticado
+  // Redirigir si ya está autenticado como profesional
   useEffect(() => {
-    if (isAutenticado) {
+    if (isAutenticado && tipoUsuario === 'profesional' && !isCargando) {
       navigate('/dashboardProfesional');
     }
-  }, [isAutenticado, navigate]);
+  }, [isAutenticado, tipoUsuario, isCargando, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setIsCargando(true);
+    setIsRegistrando(true);
 
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden');
-      setIsCargando(false);
+      setIsRegistrando(false);
       return;
     }
 
@@ -50,7 +88,7 @@ const RegisterProfesional = () => {
     const telefonoLimpio = formData.telefono.replace(/[^\d]/g, '');
     if (telefonoLimpio.length < 8) {
       setError('El teléfono debe tener al menos 8 dígitos');
-      setIsCargando(false);
+      setIsRegistrando(false);
       return;
     }
 
@@ -84,7 +122,7 @@ const RegisterProfesional = () => {
       });
 
       console.log('Profesional registrado exitosamente:', userCredential.user);
-      navigate('/dashboardProfesional');
+      // La navegación se manejará automáticamente por el useEffect cuando se actualice el estado
       
     } catch (error) {
       console.error('Error al registrar profesional:', error);
@@ -104,7 +142,7 @@ const RegisterProfesional = () => {
           setError('Error al crear la cuenta. Inténtalo de nuevo.');
       }
     } finally {
-      setIsCargando(false);
+      setIsRegistrando(false);
     }
   };
 
@@ -126,10 +164,18 @@ const RegisterProfesional = () => {
     }
   };
 
+  // Función para manejar la selección del tipo de profesional
+  const handleTipoProfesionalChange = (tipo) => {
+    setFormData({
+      ...formData,
+      tipoProfesional: tipo
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center p-4 overflow-y-auto">
       {/* Fondo decorativo */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute h-screen inset-0 overflow-hidden">
         <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
         <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
@@ -175,21 +221,82 @@ const RegisterProfesional = () => {
 
         {/* Formulario */}
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Tipo de Profesional */}
+          {/* Tipo de Profesional - Botones personalizados */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de Profesional
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Tipo de Usuario
             </label>
-            <select
-              name="tipoProfesional"
-              value={formData.tipoProfesional}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              disabled={isCargando}
-            >
-              <option value="veterinario">Veterinario</option>
-              <option value="peluquero">Peluquero</option>
-            </select>
+                        <div className="flex flex-row gap-3">
+              {tiposProfesional.map((profesional) => (
+                <button
+                  key={profesional.tipo}
+                  type="button"
+                  onClick={() => handleTipoProfesionalChange(profesional.tipo)}
+                  disabled={isRegistrando}
+                  className={`
+                    flex-1 relative p-3 rounded-xl border-2 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-0
+                    ${formData.tipoProfesional === profesional.tipo 
+                      ? profesional.color === 'blue'
+                        ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-100'
+                        : profesional.color === 'violet'
+                        ? 'border-violet-500 bg-violet-50 shadow-lg shadow-violet-100'
+                        : 'border-green-500 bg-green-50 shadow-lg shadow-green-100'
+                      : 'border-gray-200 bg-white hover:border-gray-300'
+                    }
+                  `}
+                >
+                  <div className="flex flex-col items-center space-y-2 text-center">
+                    <div className={`
+                      p-2 rounded-lg
+                      ${formData.tipoProfesional === profesional.tipo
+                        ? profesional.color === 'blue'
+                          ? 'bg-blue-500 text-white'
+                          : profesional.color === 'violet'
+                          ? 'bg-violet-500 text-white'
+                          : 'bg-green-500 text-white'
+                        : profesional.color === 'blue'
+                          ? 'bg-blue-100 text-blue-600'
+                          : profesional.color === 'violet'
+                          ? 'bg-violet-100 text-violet-600'
+                          : 'bg-green-100 text-green-600'
+                      }
+                    `}>
+                      {profesional.icono}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`
+                        font-semibold text-sm truncate
+                        ${formData.tipoProfesional === profesional.tipo
+                          ? profesional.color === 'blue'
+                            ? 'text-blue-900'
+                            : profesional.color === 'violet'
+                            ? 'text-violet-900'
+                            : 'text-green-900'
+                          : 'text-gray-900'
+                        }
+                      `}>
+                        {profesional.nombre}
+                      </h3>
+                                            <p className={`
+                        hidden sm:block text-xs text-gray-600 truncate
+                      `}>
+                        {profesional.descripcion}
+                      </p>
+                    </div>
+                    {formData.tipoProfesional === profesional.tipo && (
+                      <div className={`
+                        absolute top-2 right-2 p-1 rounded-full
+                        ${profesional.color === 'blue' ? 'bg-blue-500' : profesional.color === 'violet' ? 'bg-violet-500' : 'bg-green-500'}
+                      `}>
+                        <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Nombre */}
@@ -212,7 +319,7 @@ const RegisterProfesional = () => {
                 placeholder="Tu nombre completo"
                 value={formData.nombre}
                 onChange={handleChange}
-                disabled={isCargando}
+                disabled={isRegistrando}
               />
             </div>
           </div>
@@ -237,7 +344,7 @@ const RegisterProfesional = () => {
                 placeholder="tu@email.com"
                 value={formData.email}
                 onChange={handleChange}
-                disabled={isCargando}
+                disabled={isRegistrando}
               />
             </div>
           </div>
@@ -262,7 +369,7 @@ const RegisterProfesional = () => {
                 placeholder="+34 123 456 789"
                 value={formData.telefono}
                 onChange={handleChange}
-                disabled={isCargando}
+                disabled={isRegistrando}
               />
             </div>
           </div>
@@ -278,10 +385,10 @@ const RegisterProfesional = () => {
               type="text"
               required
               className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              placeholder={formData.tipoProfesional === 'veterinario' ? 'Cirugía, Dermatología, etc.' : 'Corte de raza, Baño terapéutico, etc.'}
+              placeholder={formData.tipoProfesional === 'veterinario' ? 'Cirugía, Dermatología, etc.' : formData.tipoProfesional === 'peluquero' ? 'Corte de raza, Baño terapéutico, etc.' : 'Alimentos, Juguetes, Accesorios, etc.'}
               value={formData.especialidad}
               onChange={handleChange}
-              disabled={isCargando}
+              disabled={isRegistrando}
             />
           </div>
 
@@ -299,26 +406,68 @@ const RegisterProfesional = () => {
               placeholder="Av. Principal 123, Ciudad"
               value={formData.direccion}
               onChange={handleChange}
-              disabled={isCargando}
+              disabled={isRegistrando}
             />
           </div>
 
           {/* Horario */}
           <div>
-            <label htmlFor="horario" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
               Horario de atención
             </label>
-            <input
-              id="horario"
-              name="horario"
-              type="text"
-              required
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              placeholder="Lun-Vie: 9:00-18:00, Sáb: 9:00-14:00"
-              value={formData.horario}
-              onChange={handleChange}
-              disabled={isCargando}
-            />
+            
+            {/* Horarios predefinidos */}
+            <div className="mb-4">
+              <p className="text-xs text-gray-600 mb-2">Horarios comunes:</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {[
+                  { nombre: 'Comercial estándar', horario: 'Lun-Vie: 9:00-18:00, Sáb: 9:00-14:00' },
+                  { nombre: 'Extendido', horario: 'Lun-Vie: 8:00-20:00, Sáb: 8:00-18:00' },
+                  { nombre: 'Fines de semana', horario: 'Lun-Vie: 10:00-19:00, Sáb-Dom: 9:00-17:00' },
+                  { nombre: '24/7', horario: 'Todos los días: 24 horas' }
+                ].map((opcion, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setFormData({...formData, horario: opcion.horario})}
+                    disabled={isRegistrando}
+                    className={`
+                      p-2 text-xs rounded-lg border transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed
+                      ${formData.horario === opcion.horario
+                        ? 'border-orange-500 bg-orange-50 text-orange-700'
+                        : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                      }
+                    `}
+                  >
+                    <div className="font-medium">{opcion.nombre}</div>
+                    <div className="text-xs opacity-75">{opcion.horario}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Horario personalizado */}
+            <div className="space-y-3">
+              <p className="text-xs text-gray-600">O configura tu horario personalizado:</p>
+              
+              {/* Input para horario personalizado */}
+              <div>
+                <input
+                  id="horario"
+                  name="horario"
+                  type="text"
+                  required
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                  placeholder="Ej: Lun-Vie: 9:00-18:00, Sáb: 9:00-14:00"
+                  value={formData.horario}
+                  onChange={handleChange}
+                  disabled={isRegistrando}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Escribe tu horario personalizado o selecciona uno de arriba
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Años de experiencia */}
@@ -336,11 +485,12 @@ const RegisterProfesional = () => {
               placeholder="5"
               value={formData.experiencia}
               onChange={handleChange}
-              disabled={isCargando}
+              disabled={isRegistrando}
             />
           </div>
 
           {/* Número de licencia */}
+          {formData.tipoProfesional === 'veterinario' && (
           <div>
             <label htmlFor="licencia" className="block text-sm font-medium text-gray-700 mb-2">
               Número de licencia profesional
@@ -354,10 +504,10 @@ const RegisterProfesional = () => {
               placeholder="Número de licencia o registro profesional"
               value={formData.licencia}
               onChange={handleChange}
-              disabled={isCargando}
+              disabled={isRegistrando}
             />
           </div>
-
+          )}
           {/* Contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -378,7 +528,7 @@ const RegisterProfesional = () => {
                 placeholder="Mínimo 6 caracteres"
                 value={formData.password}
                 onChange={handleChange}
-                disabled={isCargando}
+                disabled={isRegistrando}
               />
             </div>
           </div>
@@ -403,7 +553,7 @@ const RegisterProfesional = () => {
                 placeholder="Repite tu contraseña"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                disabled={isCargando}
+                disabled={isRegistrando}
               />
             </div>
           </div>
@@ -412,10 +562,10 @@ const RegisterProfesional = () => {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={isCargando}
+              disabled={isRegistrando}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-105 shadow-lg"
             >
-              {isCargando ? (
+              {isRegistrando ? (
                 <div className="flex items-center">
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

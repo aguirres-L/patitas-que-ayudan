@@ -206,14 +206,21 @@ const Dashboard = () => {
   const handleAgregarMascota = async (mascota) => {
     setIsCargandoMascota(true);
     try {
-      await agregarMascotaAUsuario(usuario.uid, mascota); // Usar el uid de Firebase Auth
+      console.log('🔄 Guardando mascota en Firestore:', mascota);
+      
+      await agregarMascotaAUsuario(usuario.uid, mascota);
+      console.log('✅ Mascota guardada en Firestore');
+      
       // Recargar datos del usuario después de agregar mascota
       await cargarDatosUsuario();
+      console.log('✅ Datos de usuario recargados');
+      
       // Cerrar el modal después de agregar exitosamente
       setMostrarFormularioMascota(false);
+      alert('¡Mascota agregada exitosamente!');
     } catch (e) {
-      console.error("Error al agregar mascota:", e);
-      alert("Error al agregar mascota");
+      console.error("❌ Error al agregar mascota:", e);
+      alert("Error al agregar mascota: " + e.message);
     }
     setIsCargandoMascota(false);
   };
@@ -249,10 +256,10 @@ const Dashboard = () => {
         {/* Header del Dashboard */}
         <div className="text-center mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            Bienvenido a tu Dashboard
+            Bienvenido a  Huellitas Seguras
           </h2>
           <p className="text-gray-600 text-sm sm:text-base">
-            Gestiona tus mascotas y encuentra servicios veterinarios y de peluquería
+            Gestiona tus mascotas y encuentra servicios de Veterinaria, Peluquería y descuentos en Tiendas
           </p>
         </div>
 

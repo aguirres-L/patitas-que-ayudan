@@ -13,7 +13,13 @@ import {
   setDoc,
   arrayUnion
 } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { 
+  ref, 
+  uploadBytes, 
+  getDownloadURL, 
+  deleteObject 
+} from "firebase/storage";
+import { db, storage } from "./firebaseConfig";
 
 /**
  * Crea una nueva colección en Firestore
@@ -571,6 +577,371 @@ export const eliminarCita = async (citaId) => {
     console.log(`Cita ${citaId} eliminada exitosamente`);
   } catch (error) {
     console.error('Error al eliminar cita:', error);
+    throw error;
+  }
+};
+
+/**
+ * Agrega un nuevo producto al array de productos de un profesional/tienda
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {Object} producto - Datos del producto
+ * @returns {Promise<string>} - ID del producto creado
+ */
+export const agregarProducto = async (profesionalId, producto) => {
+  try {
+    const profesionalRef = doc(db, "profesionales", profesionalId);
+    
+    // Generar ID único para el producto
+    const productoId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    
+    const productoCompleto = {
+      id: productoId,
+      ...producto,
+      fechaCreacion: new Date(),
+      fechaActualizacion: new Date(),
+      isActivo: true
+    };
+    
+    await updateDoc(profesionalRef, {
+      productos: arrayUnion(productoCompleto)
+    });
+    
+    console.log(`Producto creado con ID: ${productoId} en profesional ${profesionalId}`);
+    return productoId;
+  } catch (error) {
+    console.error('Error al crear producto:', error);
+    throw error;
+  }
+};
+
+/**
+ * Actualiza un producto existente en el array de productos del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} productoId - ID del producto
+ * @param {Object} datosActualizados - Datos a actualizar
+ * @returns {Promise<void>}
+ */
+export const actualizarProducto = async (profesionalId, productoId, datosActualizados) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.productos) {
+      throw new Error('Profesional no encontrado o sin productos');
+    }
+    
+    // Actualizar el producto específico en el array
+    const productosActualizados = profesional.productos.map(producto => 
+      producto.id === productoId 
+        ? { ...producto, ...datosActualizados, fechaActualizacion: new Date() }
+        : producto
+    );
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      productos: productosActualizados
+    });
+    
+    console.log(`Producto ${productoId} actualizado exitosamente`);
+  } catch (error) {
+    console.error('Error al actualizar producto:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina un producto del array de productos del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} productoId - ID del producto
+ * @returns {Promise<void>}
+ */
+export const eliminarProducto = async (profesionalId, productoId) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.productos) {
+      throw new Error('Profesional no encontrado o sin productos');
+    }
+    
+    // Filtrar el producto a eliminar
+    const productosActualizados = profesional.productos.filter(producto => producto.id !== productoId);
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      productos: productosActualizados
+    });
+    
+    console.log(`Producto ${productoId} eliminado exitosamente`);
+  } catch (error) {
+    console.error('Error al eliminar producto:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene todos los productos de un profesional/tienda
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @returns {Promise<Array>} - Array de productos
+ */
+export const obtenerProductosPorProfesional = async (profesionalId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.productos) {
+      return [];
+    }
+    
+    // Filtrar solo productos activos y ordenar por fecha de creación
+    const productosActivos = profesional.productos
+      .filter(producto => producto.isActivo !== false)
+      .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+    
+    return productosActivos;
+  } catch (error) {
+    console.error('Error al obtener productos del profesional:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene un producto específico por ID dentro del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} productoId - ID del producto
+ * @returns {Promise<Object|null>} - Producto encontrado o null
+ */
+export const obtenerProductoPorId = async (profesionalId, productoId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.productos) {
+      return null;
+    }
+    
+    const producto = profesional.productos.find(p => p.id === productoId);
+    return producto || null;
+  } catch (error) {
+    console.error('Error al obtener producto por ID:', error);
+    throw error;
+  }
+};
+
+/**
+ * Agrega un nuevo descuento al array de descuentos de un profesional/tienda
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {Object} descuento - Datos del descuento
+ * @returns {Promise<string>} - ID del descuento creado
+ */
+export const agregarDescuento = async (profesionalId, descuento) => {
+  try {
+    const profesionalRef = doc(db, "profesionales", profesionalId);
+    
+    // Generar ID único para el descuento
+    const descuentoId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    
+    const descuentoCompleto = {
+      id: descuentoId,
+      ...descuento,
+      fechaCreacion: new Date(),
+      fechaActualizacion: new Date(),
+      isActivo: true
+    };
+    
+    await updateDoc(profesionalRef, {
+      descuentos: arrayUnion(descuentoCompleto)
+    });
+    
+    console.log(`Descuento creado con ID: ${descuentoId} en profesional ${profesionalId}`);
+    return descuentoId;
+  } catch (error) {
+    console.error('Error al crear descuento:', error);
+    throw error;
+  }
+};
+
+/**
+ * Actualiza un descuento existente en el array de descuentos del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} descuentoId - ID del descuento
+ * @param {Object} datosActualizados - Datos a actualizar
+ * @returns {Promise<void>}
+ */
+export const actualizarDescuento = async (profesionalId, descuentoId, datosActualizados) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.descuentos) {
+      throw new Error('Profesional no encontrado o sin descuentos');
+    }
+    
+    // Actualizar el descuento específico en el array
+    const descuentosActualizados = profesional.descuentos.map(descuento => 
+      descuento.id === descuentoId 
+        ? { ...descuento, ...datosActualizados, fechaActualizacion: new Date() }
+        : descuento
+    );
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      descuentos: descuentosActualizados
+    });
+    
+    console.log(`Descuento ${descuentoId} actualizado exitosamente`);
+  } catch (error) {
+    console.error('Error al actualizar descuento:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina un descuento del array de descuentos del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} descuentoId - ID del descuento
+ * @returns {Promise<void>}
+ */
+export const eliminarDescuento = async (profesionalId, descuentoId) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.descuentos) {
+      throw new Error('Profesional no encontrado o sin descuentos');
+    }
+    
+    // Filtrar el descuento a eliminar
+    const descuentosActualizados = profesional.descuentos.filter(descuento => descuento.id !== descuentoId);
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      descuentos: descuentosActualizados
+    });
+    
+    console.log(`Descuento ${descuentoId} eliminado exitosamente`);
+  } catch (error) {
+    console.error('Error al eliminar descuento:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene todos los descuentos de un profesional/tienda
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @returns {Promise<Array>} - Array de descuentos
+ */
+export const obtenerDescuentosPorProfesional = async (profesionalId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.descuentos) {
+      return [];
+    }
+    
+    // Filtrar solo descuentos activos y ordenar por fecha de creación
+    const descuentosActivos = profesional.descuentos
+      .filter(descuento => descuento.isActivo !== false)
+      .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+    
+    return descuentosActivos;
+  } catch (error) {
+    console.error('Error al obtener descuentos del profesional:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene un descuento específico por ID dentro del profesional
+ * @param {string} profesionalId - ID del profesional/tienda
+ * @param {string} descuentoId - ID del descuento
+ * @returns {Promise<Object|null>} - Descuento encontrado o null
+ */
+export const obtenerDescuentoPorId = async (profesionalId, descuentoId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.descuentos) {
+      return null;
+    }
+    
+    const descuento = profesional.descuentos.find(d => d.id === descuentoId);
+    return descuento || null;
+  } catch (error) {
+    console.error('Error al obtener descuento por ID:', error);
+    throw error;
+  }
+};
+
+// ==================== FUNCIONES DE STORAGE ====================
+
+/**
+ * Sube un archivo a Firebase Storage
+ * @param {File} archivo - Archivo a subir
+ * @param {string} ruta - Ruta en Storage (ej: 'users/123/pets/456')
+ * @param {string} nombreArchivo - Nombre del archivo
+ * @returns {Promise<string>} - URL de descarga del archivo
+ */
+export const subirArchivo = async (archivo, ruta, nombreArchivo) => {
+  try {
+    // Crear referencia única para el archivo
+    const extension = archivo.name.split('.').pop();
+    const nombreUnico = `${nombreArchivo}_${Date.now()}.${extension}`;
+    const storageRef = ref(storage, `${ruta}/${nombreUnico}`);
+    
+    // Subir archivo
+    const snapshot = await uploadBytes(storageRef, archivo);
+    
+    // Obtener URL de descarga
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    
+    console.log(`Archivo subido exitosamente: ${downloadURL}`);
+    return downloadURL;
+  } catch (error) {
+    console.error('Error al subir archivo:', error);
+    throw error;
+  }
+};
+
+/**
+ * Sube una imagen de mascota a Firebase Storage
+ * @param {string} userId - ID del usuario
+ * @param {string} petId - ID de la mascota
+ * @param {File} archivo - Archivo de imagen
+ * @returns {Promise<string>} - URL de la imagen subida
+ */
+export const subirImagenMascota = async (userId, petId, archivo) => {
+  try {
+    const ruta = `users/${userId}/pets/${petId}/images`;
+    const nombreArchivo = `profile_${petId}`;
+    
+    const imageUrl = await subirArchivo(archivo, ruta, nombreArchivo);
+    return imageUrl;
+  } catch (error) {
+    console.error('Error al subir imagen de mascota:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina un archivo de Firebase Storage
+ * @param {string} urlArchivo - URL completa del archivo
+ * @returns {Promise<void>}
+ */
+export const eliminarArchivo = async (urlArchivo) => {
+  try {
+    // Extraer la ruta del archivo desde la URL
+    const url = new URL(urlArchivo);
+    const rutaArchivo = decodeURIComponent(url.pathname.split('/o/')[1]?.split('?')[0] || '');
+    
+    if (!rutaArchivo) {
+      throw new Error('No se pudo extraer la ruta del archivo desde la URL');
+    }
+    
+    const storageRef = ref(storage, rutaArchivo);
+    await deleteObject(storageRef);
+    
+    console.log('Archivo eliminado exitosamente');
+  } catch (error) {
+    console.error('Error al eliminar archivo:', error);
     throw error;
   }
 };

@@ -2,15 +2,17 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDbg-XrnYMyKO8JPiewi7H54gF_Pmx5cdI",
-  authDomain: "toner-app.firebaseapp.com",
-  projectId: "toner-app",
-  storageBucket: "toner-app.firebasestorage.app",
-  messagingSenderId: "443927583370",
-  appId: "1:443927583370:web:ff0d092b79bed1913beb73"
+  apiKey: "AIzaSyA3Cn9e9j8iOx6RNQoYfCVUOpLXJmNKPPI",
+  authDomain: "verdu-shop.firebaseapp.com",
+  projectId: "verdu-shop",
+  storageBucket: "verdu-shop.appspot.com",
+  messagingSenderId: "188984786995",
+  appId: "1:188984786995:web:5c6ce0dd1e82975d1da346"
+
 };
 
 // Initialize Firebase
@@ -22,4 +24,8 @@ export const auth = getAuth(app);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
+// Initialize Firebase Storage and get a reference to the service
+export const storage = getStorage(app);
+
 export default app; 
+

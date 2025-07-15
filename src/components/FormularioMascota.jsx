@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { ImageUploader } from './ImageUploader';
+import { useAuth } from '../contexts/AuthContext';
 
 // Este componente no recibe props opcionales.
 export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
+  const { usuario } = useAuth();
+  
   // Tabs
   const [tab, setTab] = useState(0);
 
@@ -10,7 +14,8 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
   const [raza, setRaza] = useState('');
   const [edad, setEdad] = useState('');
   const [color, setColor] = useState('');
-  const [fotoUrl, setFotoUrl] = useState('');
+  const [archivoImagen, setArchivoImagen] = useState(null);
+  const [urlImagenMascota, setUrlImagenMascota] = useState('');
   const [contacto, setContacto] = useState('');
 
   // Detalles avanzados
@@ -25,6 +30,9 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
     const random = Math.random().toString(36).substr(2, 9);
     return `${timestamp}-${random}`;
   };
+
+  // Generar ID único para esta mascota (una sola vez)
+  const [mascotaId] = useState(() => generarIdUnico());
 
   // Animación simple para tabs
   const tabClasses = (active) =>
@@ -51,12 +59,12 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
     if (!nombre || !raza || !edad) return;
     
     const mascotaConId = {
-      id: generarIdUnico(), // Generar ID único
+      id: mascotaId, // Usar el ID generado al inicio
       nombre,
       raza,
       edad: Number(edad),
       color,
-      fotoUrl,
+      fotoUrl: urlImagenMascota, // Usar la URL de la imagen subida
       contacto,
       vacunas: vacunas.filter(v => v.nombre && v.fecha),
       alergias,
@@ -72,7 +80,8 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
     setRaza('');
     setEdad('');
     setColor('');
-    setFotoUrl('');
+    setArchivoImagen(null);
+    setUrlImagenMascota('');
     setContacto('');
     setVacunas([{ nombre: '', fecha: '' }]);
     setAlergias('');
@@ -137,11 +146,12 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
               value={color}
               onChange={e => setColor(e.target.value)}
             />
-            <input
-              className="border rounded px-3 py-2 w-full text-base"
-              placeholder="Foto (URL)"
-              value={fotoUrl}
-              onChange={e => setFotoUrl(e.target.value)}
+            <ImageUploader
+              onImageSelect={setArchivoImagen}
+              onImageUploaded={setUrlImagenMascota}
+              isCargando={isCargando}
+              userId={usuario?.uid}
+              petId={mascotaId}
             />
          {/*    <input
               className="border rounded px-3 py-2 w-full text-base"
