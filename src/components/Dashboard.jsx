@@ -8,6 +8,7 @@ import Peluquerias from './Peluquerias';
 import Veterinarias from './Veterinarias';
 import { agregarMascotaAUsuario, obtenerUsuarioPorUid, obtenerProfesionalesPorTipo, eliminarCita, actualizarCita } from '../data/firebase/firebase';
 import { FormularioMascota } from './FormularioMascota';
+import Tiendas from './Tiendas';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Dashboard = () => {
   // Estados para profesionales
   const [veterinarios, setVeterinarios] = useState([]);
   const [peluqueros, setPeluqueros] = useState([]);
+  const [tiendas, setTiendas] = useState([]);
   const [isCargandoVeterinarios, setIsCargandoVeterinarios] = useState(false);
   const [isCargandoPeluqueros, setIsCargandoPeluqueros] = useState(false);
   const [citasCancelando, setCitasCancelando] = useState(new Set()); // Para controlar qué citas se están cancelando
@@ -75,7 +77,15 @@ const Dashboard = () => {
     distancia: 'Distancia no disponible'
   });
 
-  // Función para cargar profesionales
+  const mapearProfesionalATienda = (profesional) => ({
+
+    id: profesional.id,
+    nombre: profesional.nombre,
+    direccion: profesional.direccion,
+    telefono: profesional.telefono,
+  });
+
+    // Función para cargar profesionales
   const cargarProfesionales = async () => {
     setIsCargandoVeterinarios(true);
     setIsCargandoPeluqueros(true);
@@ -90,6 +100,12 @@ const Dashboard = () => {
       const peluquerosData = await obtenerProfesionalesPorTipo('peluquero');
       const peluquerosMapeados = peluquerosData.map(mapearProfesionalAPeluqueria);
       setPeluqueros(peluquerosMapeados);
+
+
+      // Cargar tiendas
+      const tiendaData = await obtenerProfesionalesPorTipo('tienda');
+      const tiendasMapeadas = tiendaData.map(mapearProfesionalATienda);
+      setTiendas(tiendasMapeadas);
       
     } catch (error) {
       console.error("Error al cargar profesionales:", error);
@@ -167,6 +183,7 @@ const Dashboard = () => {
       return;
     }
 
+    
     // Agregar la cita al set de citas cancelando
     setCitasCancelando(prev => new Set(prev).add(cita.id));
 
@@ -485,13 +502,13 @@ const Dashboard = () => {
         </div>
 
         {/* Sección de Suscripción */}
-        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 mb-8 text-white">
+      {/*   <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 mb-8 text-white">
           <h3 className="font-bold text-xl mb-2">Suscripción Premium</h3>
           <p className="mb-4 text-green-100">Desbloquea acceso para veterinarios y peluqueros por solo $5.000/mes.</p>
           <button className="bg-white text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors duration-200 font-medium">
             Activar
           </button>
-        </div>
+        </div> */}
 
         {/* Sección de Clínicas Veterinarias */}
         <Veterinarias 
@@ -505,6 +522,13 @@ const Dashboard = () => {
           peluquerias={peluqueros} 
           manejarAbrirFormularioPeluqueria={manejarAbrirFormularioPeluqueria}
           isCargando={isCargandoPeluqueros}
+        />
+
+
+        {/* Sección de Tiendas */}
+        <Tiendas 
+              tiendas={tiendas} 
+          isCargando={isCargandoUsuario}
         />
       </div>
 

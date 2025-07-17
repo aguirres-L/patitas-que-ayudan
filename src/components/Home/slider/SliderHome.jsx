@@ -11,6 +11,17 @@ import siete from "../../../assets/13.png"
 import ocho from "../../../assets/14.png"
 import nueve from "../../../assets/15.png"
 
+import perroQr1 from '../../../assets/milopublic.PNG'
+import perroQr2 from '../../../assets/morapublic.PNG'
+import perroQr3 from '../../../assets/nikypubli.PNG'
+
+import ui1 from '../../../assets/ui_1.png'
+import ui2 from '../../../assets/ui_2.png'
+import ui3 from '../../../assets/ui_3.png'
+
+import rescate1 from '../../../assets/121.PNG'
+import rescate2 from '../../../assets/aa.PNG'
+import rescate3 from '../../../assets/cc.PNG'
 
 // Importar imagenes
 import perro from '../../../assets/perros_.png'
@@ -21,9 +32,9 @@ import perro4 from '../../../assets/perros_4.png'
 
 // Importar imagenes
 const urlImages = [uno, cinco, dos, seis, tres, siete, cuatro, ocho, /* nueve */]
-const urlImages2 = [perro, perro1, perro2, perro3, perro4]
-const urlImages3= [perro, perro1, perro2, perro3, perro4]
-const urlImages4= [perro, perro1, perro2, perro3, perro4]
+const urlImages2 = [perro ,perroQr1, perro2,perroQr3, perro4 ,perroQr2]
+const urlImages3= [ui1, ui2, ui3]
+const urlImages4= [rescate1,rescate2,rescate3]
 
 
 // Datos de los slides

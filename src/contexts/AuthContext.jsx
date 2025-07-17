@@ -14,6 +14,35 @@ export const useAuth = () => {
   return context;
 };
 
+// Función para limpiar datos de autenticación anteriores
+const limpiarAuthAnterior = () => {
+  try {
+    // Limpiar localStorage
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes('firebase') || key.includes('auth') || key.includes('toner'))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    // Limpiar sessionStorage
+    const sessionKeysToRemove = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key && (key.includes('firebase') || key.includes('auth') || key.includes('toner'))) {
+        sessionKeysToRemove.push(key);
+      }
+    }
+    sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
+
+    console.log('Datos de autenticación anteriores limpiados');
+  } catch (error) {
+    console.error('Error al limpiar datos de auth:', error);
+  }
+};
+
 // Proveedor del contexto
 export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
@@ -27,6 +56,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsCargandoLogout(true);
       await signOut(auth);
+      // Limpiar datos locales después del logout
+      limpiarAuthAnterior();
       console.log('Usuario cerró sesión exitosamente');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
@@ -67,6 +98,9 @@ export const AuthProvider = ({ children }) => {
 
   // Escuchar cambios en el estado de autenticación
   useEffect(() => {
+    // Limpiar datos de auth anteriores al inicializar
+    limpiarAuthAnterior();
+
     const unsubscribe = onAuthStateChanged(auth, async (usuario) => {
       setUsuario(usuario);
       

@@ -1,7 +1,7 @@
 export default function Peluquerias({peluquerias, manejarAbrirFormularioPeluqueria, isCargando = false}) {
     return(
         <div className="mt-12">
-        <h3 className="text-2xl font-bold mb-6">Peluquerías Cercanas</h3>
+        <h3 className="text-2xl font-bold mb-6">Peluquerías Registradas</h3>
         
         {isCargando ? (
           <div className="text-center py-8">

@@ -142,6 +142,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{titulo}</h1>
         </Link>
+
+          {mostrarUsuario && (
+            <span className="text-lg text-gray-600 px-4 py-3sm:block">
+              Hola, {usuario?.displayName || usuario?.email}
+            </span>
+          )}
+
+
         {/* Botón hamburguesa */}
         <button
           className="sm:hidden flex items-center px-3 py-2 border rounded text-orange-600 border-orange-400"
@@ -154,11 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
         {/* Menú links */}
         <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white/95 sm:bg-transparent shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
-          {mostrarUsuario && (
-            <span className="text-sm text-gray-600 px-4 py-2 sm:block">
-              Hola, {usuario?.displayName || usuario?.email}
-            </span>
-          )}
+         
           {mostrarConfiguracion && (
             <Link 
               to="/settings" 

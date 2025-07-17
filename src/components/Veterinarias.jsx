@@ -3,7 +3,7 @@ export default function Veterinarias({clinicasVeterinarias, manejarAbrirFormular
     return (
 
         <div className="mt-12">
-        <h3 className="text-2xl font-bold mb-6">Clínicas Veterinarias Cercanas</h3>
+        <h3 className="text-2xl font-bold mb-6">Clínicas Veterinarias Registradas</h3>
         
         {isCargando ? (
           <div className="text-center py-8">

@@ -59,7 +59,7 @@ export default function Tiendas({ tiendas, isCargando = false }) {
 
   return (
     <div className="mt-12">
-      <h3 className="text-2xl font-bold mb-6">Tiendas Cercanas</h3>
+      <h3 className="text-2xl font-bold mb-6">Tiendas Registradas</h3>
       
       {isCargando ? (
         <div className="text-center py-8">
