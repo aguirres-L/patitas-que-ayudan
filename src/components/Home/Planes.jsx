@@ -27,10 +27,10 @@ export default function Planes(){
                   <span className="text-green-500 mr-2">✓</span>
                   3 meses de comunicación profesional
                 </li>
-                                 <li className="flex items-center">
+                  {/*                <li className="flex items-center">
                    <span className="text-green-500 mr-2">✓</span>
                    50% de tu compra donado a rescate animal
-                 </li>
+                 </li> */}
               </ul>
               <a href="/register" className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold block">
                 Comenzar ahora

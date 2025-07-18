@@ -9,11 +9,14 @@ import Veterinarias from './Veterinarias';
 import { agregarMascotaAUsuario, obtenerUsuarioPorUid, obtenerProfesionalesPorTipo, eliminarCita, actualizarCita } from '../data/firebase/firebase';
 import { FormularioMascota } from './FormularioMascota';
 import Tiendas from './Tiendas';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { usuario, cerrarSesion, isCargandoLogout } = useAuth();
+  const { typeTheme } = useTheme();
   
+
   // Estados para controlar los modales
   const [mostrarFormularioVeterinaria, setMostrarFormularioVeterinaria] = useState(false);
   const [mostrarFormularioPeluqueria, setMostrarFormularioPeluqueria] = useState(false);
@@ -176,6 +179,7 @@ const Dashboard = () => {
   useEffect(() => {
     cargarDatosUsuario();
   }, [usuario?.uid]);
+  
 
   // Función para cancelar una cita
   const handleCancelarCita = async (cita) => {
@@ -248,7 +252,11 @@ const Dashboard = () => {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
+    <div className={
+      typeTheme === 'light'
+        ? "min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16"
+        : "min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-16"
+    }>
       {/* Fondo decorativo - Responsivo */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Elementos decorativos solo en pantallas medianas y grandes */}
@@ -271,18 +279,24 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Header del Dashboard */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <div className="text-center mt-4 mb-8">
+          <h2 className={typeTheme === 'light'
+            ? "text-2xl sm:text-3xl font-bold text-gray-900 mb-2"
+            : "text-2xl sm:text-3xl font-bold text-white mb-2"
+          }>
             Bienvenido a  Huellitas Seguras
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base">
+          <p className={typeTheme === 'light'?"text-sm  text-gray-600 mb-4":'text-sm  text-white mb-4' }>
             Gestiona tus mascotas y encuentra servicios de Veterinaria, Peluquería y descuentos en Tiendas
           </p>
         </div>
 
         {/* Sección de Mascotas */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Tus Mascotas</h3>
+        <div className={typeTheme === 'light'
+          ? "bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8"
+          : "bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8"
+        }>
+          <h3 className={typeTheme === 'light'?"text-xl font-bold text-gray-900 mb-4":'text-xl font-bold text-white mb-4' } >Tus Mascotas</h3>
           
           {isCargandoUsuario ? (
             <div className="text-center py-8">
@@ -392,8 +406,11 @@ const Dashboard = () => {
         </div>
 
         {/* Sección de Citas */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Mis Citas</h3>
+        <div className={typeTheme === 'light'
+          ? "bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8"
+          : "bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8"
+        }>
+          <h3 className={typeTheme === 'light'?"text-xl font-bold text-gray-900 mb-4":"text-xl font-bold text-white mb-4"} >Mis Citas</h3>
           
           {isCargandoUsuario ? (
             <div className="text-center py-8">
@@ -461,7 +478,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-4 md:flex-row flex-col space-x-0">
                           {cita.mascotaId && (
                             <Link 
                               to={`/pet-profile/${cita.mascotaId}`}

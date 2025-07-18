@@ -1,7 +1,16 @@
+import { useTheme } from "../contexts/ThemeContext";
+
 export default function Peluquerias({peluquerias, manejarAbrirFormularioPeluqueria, isCargando = false}) {
+
+  const { typeTheme } = useTheme();
+
+
     return(
         <div className="mt-12">
-        <h3 className="text-2xl font-bold mb-6">Peluquerías Registradas</h3>
+        <h3 className={typeTheme === 'dark'
+  ? "text-2xl font-bold mb-6 text-white"
+  : "text-2xl font-bold mb-6 text-gray-900"
+}>Peluquerías Registradas</h3>
         
         {isCargando ? (
           <div className="text-center py-8">

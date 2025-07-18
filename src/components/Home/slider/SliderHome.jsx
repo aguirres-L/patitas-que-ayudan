@@ -15,9 +15,11 @@ import perroQr1 from '../../../assets/milopublic.PNG'
 import perroQr2 from '../../../assets/morapublic.PNG'
 import perroQr3 from '../../../assets/nikypubli.PNG'
 
-import ui1 from '../../../assets/ui_1.png'
-import ui2 from '../../../assets/ui_2.png'
-import ui3 from '../../../assets/ui_3.png'
+import ui1 from '../../../assets/a1.PNG'
+import ui2 from '../../../assets/a2.PNG'
+import ui3 from '../../../assets/a3.PNG'
+import ui4 from '../../../assets/a4.PNG'
+import ui5 from '../../../assets/a5.PNG'
 
 import rescate1 from '../../../assets/121.PNG'
 import rescate2 from '../../../assets/aa.PNG'
@@ -33,7 +35,7 @@ import perro4 from '../../../assets/perros_4.png'
 // Importar imagenes
 const urlImages = [uno, cinco, dos, seis, tres, siete, cuatro, ocho, /* nueve */]
 const urlImages2 = [perro ,perroQr1, perro2,perroQr3, perro4 ,perroQr2]
-const urlImages3= [ui1, ui2, ui3]
+const urlImages3= [ui1, ui2, ui3, ui4, ui5]
 const urlImages4= [rescate1,rescate2,rescate3]
 
 

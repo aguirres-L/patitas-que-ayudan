@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { obtenerProductosPorProfesional, obtenerDescuentosPorProfesional } from '../data/firebase/firebase';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Tiendas({ tiendas, isCargando = false }) {
   const [tiendasConDatos, setTiendasConDatos] = useState([]);
   const [isCargandoDatos, setIsCargandoDatos] = useState(false);
+const { typeTheme } = useTheme();
 
   // Cargar productos y descuentos para cada tienda
   useEffect(() => {
@@ -59,7 +61,10 @@ export default function Tiendas({ tiendas, isCargando = false }) {
 
   return (
     <div className="mt-12">
-      <h3 className="text-2xl font-bold mb-6">Tiendas Registradas</h3>
+      <h3 className={typeTheme === 'dark'
+  ? "text-2xl font-bold mb-6 text-white"
+  : "text-2xl font-bold mb-6 text-gray-900"
+}>Tiendas Registradas</h3>
       
       {isCargando ? (
         <div className="text-center py-8">

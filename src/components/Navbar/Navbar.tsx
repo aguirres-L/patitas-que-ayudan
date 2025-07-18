@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { SvgSol } from '../ui/svg/SvgSol';
+import { SvgLuna } from '../ui/svg/SvgLuna';
+import { SvgSolDark } from '../ui/svg/SvgSolDark';
+import { SvgLunaDark } from '../ui/svg/SvgLunaDark';
 
 export interface NavbarProps {
   tipo: 'home' | 'dashboard';
@@ -26,6 +31,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navigate = useNavigate();
   const { usuario } = useAuth();
   const [menuAbierto, setMenuAbierto] = useState(false);
+
+  const { typeTheme, toggleTheme } = useTheme();
+  
 
   // Función por defecto para cerrar sesión si no se proporciona
   const handleCerrarSesion = async () => {
@@ -131,20 +139,26 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Navbar para dashboard (usuario autenticado)
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm shadow-sm p-4 border-b border-orange-100">
+    <nav className={
+      typeTheme === 'dark'
+        ? 'fixed top-0 left-0 w-full z-50 bg-gray-900/90 backdrop-blur-sm shadow-sm p-4 border-b border-gray-800'
+        : 'fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm shadow-sm p-4 border-b border-orange-100'
+    }>
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo y título */}
         <Link to="/about" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-          <div className="h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+          <div className={typeTheme === 'dark'
+            ? 'h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg'
+            : 'h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg'}>
             <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{titulo}</h1>
+          <h1 className={typeTheme === 'dark' ? 'text-xl sm:text-2xl font-bold text-white' : 'text-xl sm:text-2xl font-bold text-gray-900'}>{titulo}</h1>
         </Link>
 
           {mostrarUsuario && (
-            <span className="text-lg text-gray-600 px-4 py-3sm:block">
+            <span className={typeTheme === 'dark' ? 'text-lg text-gray-200 px-4 py-3sm:block' : 'text-lg text-gray-600 px-4 py-3sm:block'}>
               Hola, {usuario?.displayName || usuario?.email}
             </span>
           )}
@@ -152,7 +166,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Botón hamburguesa */}
         <button
-          className="sm:hidden flex items-center px-3 py-2 border rounded text-orange-600 border-orange-400"
+          className={typeTheme === 'dark'
+            ? 'sm:hidden flex items-center px-3 py-2 border rounded text-orange-200 border-orange-400'
+            : 'sm:hidden flex items-center px-3 py-2 border rounded text-orange-600 border-orange-400'}
           onClick={() => setMenuAbierto(!menuAbierto)}
           aria-label="Abrir menú"
         >
@@ -161,22 +177,26 @@ export const Navbar: React.FC<NavbarProps> = ({
           </svg>
         </button>
         {/* Menú links */}
-        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white/95 sm:bg-transparent shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto ${typeTheme === 'dark' ? 'bg-gray-900/95' : 'bg-white/85'} shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
          
           {mostrarConfiguracion && (
-            <Link 
-              to="/settings" 
-              className="text-gray-600 hover:text-orange-600 transition-colors duration-200 text-sm px-4 py-2"
-              onClick={() => setMenuAbierto(false)}
+            <button
+              onClick={toggleTheme}
+              className={typeTheme === 'dark'
+                ? 'text-gray-200 hover:text-orange-400 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'
+                : 'text-gray-600 hover:text-orange-600 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'}
+              aria-label="Cambiar tema"
             >
-              Configuración
-            </Link>
+              {typeTheme === 'light' ? <SvgLunaDark /> : <SvgSol/>}
+            </button>
           )}
           {mostrarCerrarSesion && (
             <button 
               onClick={handleCerrarSesion}
               disabled={isCargandoLogout}
-              className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm transition-colors duration-200 px-4 py-2"
+              className={typeTheme === 'dark'
+                ? 'text-red-400 hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm transition-colors duration-200 px-4 py-2'
+                : 'text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm transition-colors duration-200 px-4 py-2'}
             >
               {isCargandoLogout ? (
                 <>

@@ -35,6 +35,8 @@ function App() {
               <Route path="/register-profesional" element={<RegisterProfesional />} />
               <Route path="/about" element={<About />} />
               
+
+              
               {/* Rutas protegidas */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
