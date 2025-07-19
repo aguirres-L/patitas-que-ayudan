@@ -6,9 +6,10 @@ import { buscarMascotaPorId } from '../data/firebase/firebase';
 const PetProfilePublic = () => {
   const { id } = useParams();
   const [mascota, setMascota] = useState(null);
-  const [isCargando, setIsCargando] = useState(true);
+  const [isCargando, setIsCargando] = useState(true); 
   const [error, setError] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
 
   // Cargar datos de la mascota específica desde todos los usuarios
   useEffect(() => {
@@ -47,6 +48,20 @@ const PetProfilePublic = () => {
 
     cargarMascota();
   }, [id]);
+
+
+  // Función para abrir el modal con la foto
+  const abrirModal = () => {
+    setModalAbierto(true);
+    document.body.style.overflow = 'hidden'; // Deshabilitar scroll
+  };
+
+  // Función para cerrar el modal
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    document.body.style.overflow = 'auto'; // Habilitar scroll
+  };
+
 
   // Navbar simplificado sin dependencias de autenticación
   const NavbarPublic = () => (
@@ -178,6 +193,29 @@ console.log(mascota,'mascota');
 
       <NavbarPublic />
 
+      {/* Modal para la foto */}
+      {modalAbierto && (
+        <div className="photo-modal">
+          <div className="photo-modal-overlay" onClick={cerrarModal}></div>
+          <div className="photo-modal-content">
+            <button className="photo-modal-close" onClick={cerrarModal}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img 
+              src={mascota.fotoUrl || "/dog-avatar.png"} 
+              alt={mascota.nombre} 
+              className="photo-modal-image" 
+            />
+            <div className="photo-modal-caption">
+              <p className="text-lg font-semibold">{mascota.nombre}</p>
+              <p className="text-sm text-gray-600">{mascota.raza} • {mascota.edad} años</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -201,10 +239,11 @@ console.log(mascota,'mascota');
             {/* Información de la Mascota */}
             <div className="flex flex-col md:flex-row items-start md:items-center mb-6">
               <div className="relative">
-                <img 
+              <img 
                   src={mascota.fotoUrl || "/dog-avatar.png"} 
                   alt={mascota.nombre} 
-                  className="w-24 h-24 rounded-full mr-6 mb-4 md:mb-0 border-4 border-orange-100 shadow-lg object-cover" 
+                  className="w-24 h-24 rounded-full mr-6 mb-4 md:mb-0 border-4 border-orange-100 shadow-lg object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={abrirModal}
                 />
               </div>
               <div className="flex-1">
@@ -270,20 +309,6 @@ console.log(mascota,'mascota');
                   </div>
                 )}
 
-                {mascota.propietario.direccion && (
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-gray-600 text-sm">Dirección</p>
-                      <p className="font-medium">{mascota.propietario.direccion}</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 

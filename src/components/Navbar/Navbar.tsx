@@ -177,7 +177,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </svg>
         </button>
         {/* Menú links */}
-        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto ${typeTheme === 'dark' ? 'bg-gray-900/95' : 'bg-white/85'} shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto  shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
          
           {mostrarConfiguracion && (
             <button

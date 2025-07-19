@@ -43,7 +43,7 @@ const urlImages4= [rescate1,rescate2,rescate3]
 const datosSlides = [
   {
     id: 1,
-    titulo: "Identidad para quien más quieres",
+    titulo: "Identidad para quien más querés",
     descripcion: "Placas únicas grabadas con láser, donde el nombre y la silueta de tu mascota se convierten en arte.",
     caracteristicas: [
       "Personalización exacta: Transformamos una foto en una ilustración grabada para siempre.",
@@ -58,7 +58,7 @@ const datosSlides = [
     titulo: "Reencuentros más rápidos, menos preocupaciones",
     descripcion: "Cada placa incluye un código QR indestructible que conecta al perfil digital de tu mascota.",
     caracteristicas: [
-      "Datos vitales en crisis: Contacto del dueño y dirección.",
+      "Datos vitales en crisis: Contacto del dueño .",
       "Actualización instantánea: Modifica la información en segundos sin cambiar la placa.",
       "Tecnología que protege lo que más amas."
     ],
@@ -71,7 +71,7 @@ const datosSlides = [
     descripcion: "Acceso a nuestro sistema de citas con profesionales registrados en nuestra plataforma.",
     caracteristicas: [
       "Agenda veterinaria: Reserva citas con especialistas registrados en nuestra plataforma.",
-      "Ahorro garantizado: 5% de descuento en alimentos y accesorios.",
+     // "Ahorro garantizado: 5% de descuento en alimentos y accesorios.",
       " Lleva el control de vacunas y consultas .",
     ],
     imagenUrl: urlImages3,
@@ -82,8 +82,8 @@ const datosSlides = [
     titulo: "Cuando ganan, todos ganamos",
     descripcion: "Elegir nuestras placas es sumarse a un círculo virtuoso de ayuda.",
     caracteristicas: [
-      "Impacto colectivo: Parte de cada compra se transforma en ayuda para animales.",
-      "Comunidad solidaria: Juntos hacemos que cada rastro lleve a casa.",
+      " Parte de cada compra se transforma en ayuda para animales.",
+      " Juntos hacemos que cada rastro lleve a casa.",
       " Tu compra impulsa proyectos de bienestar animal."
     ],
     imagenUrl: urlImages4,
@@ -104,7 +104,7 @@ function ImageSlider({ imagenes, imagenAlt }) {
   }, [imagenes.length]);
 
   return (
-    <div className="relative h-full min-h-[250px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
+    <div className="relative h-full min-h-[350px] sm:min-h-[400px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
       {imagenes.map((imagen, index) => (
         <img
           key={index}
@@ -143,7 +143,7 @@ export default function SliderHome() {
   return (
     <section className="relative md:py-16  sm:py-6 lg:py-8">
       <div   className="container mx-auto px-4 sm:px-6 lg:px-1">
-        <div className="max-w-7xl mx-auto">
+        <div  className="max-w-7xl mx-auto">
           {/* Título de la sección */}
           <div className="text-center mb-4 sm:mb-2 lg:mb-8">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-6 sm:mb-3">
@@ -155,10 +155,10 @@ export default function SliderHome() {
           </div>
 
           {/* Contenedor del slider */}
-          <div  className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
-            <div className="flex flex-col lg:flex-row min-h-[400px] sm:min-h-[450px] lg:min-h-[500px]">
+          <div   className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
+            <div className="flex flex-col lg:flex-row min-h-[600px] sm:min-h-[650px] lg:min-h-[500px]">
               {/* Imagen (izquierda en desktop, arriba en móvil) */}
-              <div className="w-full lg:w-1/2 relative overflow-hidden">
+              <div className="w-full h-[350px] sm:h-[400px] lg:w-1/2 lg:h-auto relative overflow-hidden">
                 <ImageSlider 
                   imagenes={slideActualData.imagenUrl} 
                   imagenAlt={slideActualData.imagenAlt}

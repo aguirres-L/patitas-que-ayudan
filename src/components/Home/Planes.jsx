@@ -25,7 +25,7 @@ export default function Planes(){
                 </li>
                 <li className="flex items-center">
                   <span className="text-green-500 mr-2">✓</span>
-                  3 meses de comunicación profesional
+                  3 meses de membrecia gratis
                 </li>
                   {/*                <li className="flex items-center">
                    <span className="text-green-500 mr-2">✓</span>
@@ -55,11 +55,11 @@ export default function Planes(){
                 </li>
                 <li className="flex items-center">
                   <span className="text-white mr-2">✓</span>
-                  Recordatorios automáticos
+                  Actualización de datos del dueño sin cambiar chapita
                 </li>
               </ul>
               <a href="/register" className="w-full bg-white text-orange-600 py-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-semibold block">
-                Elegir premium
+                Elegir Plan Mensual
               </a>
             </div>
           </div>

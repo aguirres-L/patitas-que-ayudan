@@ -19,6 +19,9 @@ const PetProfile = () => {
   const [mostrarCitas, setMostrarCitas] = useState(false);
   const [isGuardando, setIsGuardando] = useState(false);
 
+  const [modalAbierto, setModalAbierto] = useState(false);
+
+
   // Cargar datos de la mascota específica
   useEffect(() => {
     const cargarMascota = async () => {
@@ -117,6 +120,20 @@ const PetProfile = () => {
     return null;
   }
 
+  
+  // Función para abrir el modal con la foto
+  const abrirModal = () => {
+    setModalAbierto(true);
+    document.body.style.overflow = 'hidden'; // Deshabilitar scroll
+  };
+
+  // Función para cerrar el modal
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    document.body.style.overflow = 'auto'; // Habilitar scroll
+  };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
       {/* Fondo decorativo - Responsivo */}
@@ -133,6 +150,30 @@ const PetProfile = () => {
 
       {/* Navbar modular */}
       <Navbar tipo="dashboard" />
+
+      {/* Modal para la foto */}
+      {modalAbierto && (
+        <div className="photo-modal">
+          <div className="photo-modal-overlay" onClick={cerrarModal}></div>
+          <div className="photo-modal-content">
+            <button className="photo-modal-close" onClick={cerrarModal}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img 
+              src={mascota.fotoUrl || "/dog-avatar.png"} 
+              alt={mascota.nombre} 
+              className="photo-modal-image" 
+            />
+            <div className="photo-modal-caption">
+              <p className="text-lg font-semibold">{mascota.nombre}</p>
+              <p className="text-sm text-gray-600">{mascota.raza} • {mascota.edad} años</p>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* Main Content */}
       <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -157,6 +198,7 @@ const PetProfile = () => {
               <img 
                 src={mascota.fotoUrl || "/dog-avatar.png"} 
                 alt={mascota.nombre} 
+                onClick={abrirModal}
                 className="w-24 h-24 rounded-full mr-6 mb-4 md:mb-0 border-4 border-orange-100 shadow-lg object-cover" 
               />
             </div>

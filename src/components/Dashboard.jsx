@@ -478,7 +478,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex space-x-4 md:flex-row flex-col space-x-0">
+                        <div className="flex space-x-4  md:flex-row flex-col space-x-0">
                           {cita.mascotaId && (
                             <Link 
                               to={`/pet-profile/${cita.mascotaId}`}
