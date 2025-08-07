@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   mostrarNavegacionInterna = false,
 }) => {
   const navigate = useNavigate();
-  const { usuario } = useAuth();
+  const { usuario, datosUsuario } = useAuth();
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   const { typeTheme, toggleTheme } = useTheme();
@@ -178,6 +178,22 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
         {/* Menú links */}
         <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto  shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+         
+          {/* Enlace al dashboard admin para usuarios admin */}
+          {datosUsuario?.rol === 'admin' && (
+            <Link 
+              to="/dashboard-admin" 
+              className={typeTheme === 'dark'
+                ? 'text-purple-400 hover:text-purple-300 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'
+                : 'text-purple-600 hover:text-purple-700 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'}
+              onClick={() => setMenuAbierto(false)}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Admin
+            </Link>
+          )}
          
           {mostrarConfiguracion && (
             <button

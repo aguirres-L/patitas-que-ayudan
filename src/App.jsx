@@ -7,7 +7,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import LoginProfesional from './components/LoginProfesional';
 import RegisterProfesional from './components/RegisterProfesional';
-import Dashboard from './components/Dashboard';
+import DashboardSelector from './components/DashboardSelector';
+import DashboardAdmin from './components/DashboardAdmin';
 import DashboardProfesional from './components/DashboardProfesional';
 import PetProfile from './components/PetProfile';
 import PetProfilePublic from './components/PetProfilePublic';
@@ -15,6 +16,7 @@ import VetDashboard from './components/VetDashboard';
 import GroomerDashboard from './components/GroomerDashboard';
 import UserSettings from './components/UserSettings';
 import About from './components/Home/About';
+import ProtectedRouteAdmin from './components/ProtectedRouteAdmin';
 
 function App() {
   return (
@@ -40,8 +42,13 @@ function App() {
               {/* Rutas protegidas */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <DashboardSelector />
                 </ProtectedRoute>
+              } />
+              <Route path="/dashboard-admin" element={
+                <ProtectedRouteAdmin>
+                  <DashboardAdmin />
+                </ProtectedRouteAdmin>
               } />
               <Route path="/dashboardProfesional" element={
                 <ProtectedRouteProfesional>
