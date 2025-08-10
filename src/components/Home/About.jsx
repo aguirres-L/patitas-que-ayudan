@@ -2,6 +2,7 @@ import React from 'react';
 
 // Este componente no recibe props
 const About = () => {
+  let logo = '../../public/logo1.png';
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
@@ -9,9 +10,7 @@ const About = () => {
         <div className="text-center mb-8 sm:mb-12">
           <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-4">
             <div className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
-              <svg className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
+            <img src={logo} alt="" />
             </div>
             <h1 className="text-2xl  font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               Huellitas Seguras

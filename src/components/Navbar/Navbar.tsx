@@ -7,6 +7,8 @@ import { SvgLuna } from '../ui/svg/SvgLuna';
 import { SvgSolDark } from '../ui/svg/SvgSolDark';
 import { SvgLunaDark } from '../ui/svg/SvgLunaDark';
 
+
+
 export interface NavbarProps {
   tipo: 'home' | 'dashboard';
   titulo?: string;
@@ -34,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const { typeTheme, toggleTheme } = useTheme();
   
+  let logo = '../../../public/logo1.png';
 
   // Función por defecto para cerrar sesión si no se proporciona
   const handleCerrarSesion = async () => {
@@ -67,10 +70,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="container mx-auto flex justify-between items-center">
           {/* Logo y título */}
           <Link to="/about" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-200">
-            <div className="h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
-              <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
+            <div className="h-8 w-8 rounded-full flex items-center justify-center">
+              <img src={logo} alt="" />
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               {titulo}
@@ -117,16 +118,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               </>
             )}
-            <Link 
+                     <Link 
               to="/login" 
-              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 border-b border-gray-100 sm:border-b-0"
+              className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-medium px-4 py-2 border border-orange-300 hover:border-orange-500 rounded-lg hover:bg-orange-50"
               onClick={() => setMenuAbierto(false)}
             >
               Iniciar Sesión
             </Link>
+
+            <Link 
+              to="/login-profesional" 
+              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-200 transform hover:scale-105 shadow-lg border border-blue-400"
+              onClick={() => setMenuAbierto(false)}
+            >
+              Iniciar Sesión de Servicios
+            </Link>
             <Link 
               to="/register" 
-              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg border border-orange-400"
               onClick={() => setMenuAbierto(false)}
             >
               Registrarse

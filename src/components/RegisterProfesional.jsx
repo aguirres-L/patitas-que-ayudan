@@ -64,6 +64,7 @@ const RegisterProfesional = () => {
   });
   const [isRegistrando, setIsRegistrando] = useState(false);
   const [error, setError] = useState('');
+  let logo = '../../public/logo1.png';
 
   // Redirigir si ya está autenticado como profesional
   useEffect(() => {
@@ -171,7 +172,6 @@ const RegisterProfesional = () => {
       tipoProfesional: tipo
     });
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center p-4 overflow-y-auto">
       {/* Fondo decorativo */}
@@ -188,9 +188,7 @@ const RegisterProfesional = () => {
         {/* Logo y título */}
         <div className="text-center mb-6">
           <div className="mx-auto h-16 w-16 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg mb-4">
-            <svg className="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
+             <img src={logo} alt="" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Huellitas Seguras

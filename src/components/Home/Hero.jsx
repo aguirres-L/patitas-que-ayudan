@@ -38,10 +38,10 @@ export default function Hero(){
           {/* <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mt-12 mb-8 border border-blue-100"> */}
           <div className=" p-8 mt-12 mb-8 ">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              ¿Eres profesional del cuidado de mascotas?
+              ¿Eres veterinarias, peluquerías o tiendas de mascotas?
             </h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Únete a nuestra red de profesionales y ayuda a más mascotas a encontrar su hogar
+            Únete a nuestra red de veterinarias, peluquerías y tiendas de mascotas
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -86,9 +86,11 @@ export default function Hero(){
               <p className="text-gray-600 mb-3">¿Ya tienes cuenta?</p>
               <a 
                 href="/login-profesional" 
-                className="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold transition-colors"
+            //    className="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold transition-colors"
+              className=" inline-flex items-center  bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-200 transform hover:scale-105 shadow-lg border border-blue-400"
+
               >
-                <span>Acceder a mi panel profesional</span>
+                <span>Acceder a mi panel de servicios</span>
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>

@@ -115,8 +115,25 @@ function ImageSlider({ imagenes, imagenAlt }) {
           }`}
         />
       ))}
-      {/* Overlay gradiente sutil */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent"></div>
+      
+        {/* Overlay gradiente sutil */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent"></div>
+      
+      {/* Indicadores de imágenes - centrados en la parte inferior */}
+      <div className="absolute p-2 bg-black/50 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {imagenes.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setImagenActual(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              index === imagenActual
+                ? 'bg-blue-500 scale-125 shadow-lg'
+                : 'bg-white/60 hover:bg-white/80'
+            }`}
+            aria-label={`Ir a la imagen ${index + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -155,7 +172,7 @@ export default function SliderHome() {
           </div>
 
           {/* Contenedor del slider */}
-          <div   className="relative bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
+          <div className="relative bg-white rounded-xl mb-8 sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
             <div className="flex flex-col lg:flex-row min-h-[600px] sm:min-h-[650px] lg:min-h-[500px]">
               {/* Imagen (izquierda en desktop, arriba en móvil) */}
               <div className="w-full h-[350px] sm:h-[400px] lg:w-1/2 lg:h-auto relative overflow-hidden">
@@ -168,12 +185,31 @@ export default function SliderHome() {
               {/* Contenido (derecha en desktop, abajo en móvil) */}
               <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-8 xl:p-12 flex flex-col justify-center">
                 <div className="space-y-4 sm:space-y-6">
-                  {/* Número de slide */}
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl sm:text-2xl font-bold text-orange-500">
-                      {String(slideActual + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
+                
+                  <div className="flex flex-row ">
+                    {/* Número de slide */}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl sm:text-2xl font-bold text-orange-500">
+                        {String(slideActual + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
+                    </div>
+
+                    {/* Indicadores de puntos para móvil - al lado del contador */}
+                    <div className="flex space-x-1.5 ml-3 lg:hidden">
+                      {datosSlides.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => irASlide(index)}
+                          className={`w-2 h-2 rounded-full transition-all duration-200 ${index === slideActual
+                            ? 'bg-orange-500 scale-125'
+                            : 'bg-gray-300 hover:bg-gray-400'
+                            }`}
+                          aria-label={`Ir al slide ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+
                   </div>
 
                   {/* Título */}
@@ -201,29 +237,11 @@ export default function SliderHome() {
               </div>
             </div>
 
-            {/* Botones de navegación - Responsivos */}
-            <button
-              onClick={slideAnterior}
-              className="absolute left-2 sm:left-10 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
-              aria-label="Slide anterior"
-            >
-              <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+          </div>
 
-            <button
-              onClick={slideSiguiente}
-              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-10"
-              aria-label="Slide siguiente"
-            >
-              <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Indicadores de puntos - Solo en desktop para ahorrar espacio en móvil */}
-            {/* <div className="hidden lg:block absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    
+            {/* Indicadores de puntos - Solo en desktop, posicionados en la parte inferior */}
+            <div className="hidden bg-white w-auto p-3 rounded-xl sm:rounded-2xl  shadow-xl sm:shadow-2xl overflow-hidden lg:block absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
               {datosSlides.map((_, index) => (
                 <button
                   key={index}
@@ -236,8 +254,8 @@ export default function SliderHome() {
                   aria-label={`Ir al slide ${index + 1}`}
                 />
               ))}
-            </div> */}
-          </div>
+            </div>
+
         </div>
       </div>
     </section>
