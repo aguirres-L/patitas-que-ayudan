@@ -5,11 +5,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { obtenerUsuarioPorUid } from '../data/firebase/firebase';
 import { SistemaCitas } from './SistemaCitas';
 import { EditarMascota } from './EditarMascota';
+import typeProfesionalStore from '../service/zustand';
 
 // Este componente recibe props a través de useParams
 const PetProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {getTipoProfesional} = typeProfesionalStore();
+
   const { usuario } = useAuth();
   const [pestañaActiva, setPestañaActiva] = useState('informacion');
   const [mascota, setMascota] = useState(null);
@@ -24,21 +27,31 @@ const PetProfile = () => {
 
   // Cargar datos de la mascota específica
   useEffect(() => {
+    console.log(usuario,'usuario');
+    
+    const tipoProfesional = getTipoProfesional(); 
+
+    console.log(tipoProfesional,'tipoProfesional');
+    
     const cargarMascota = async () => {
-      if (!usuario?.uid || !id) {
-        setError('No se pudo cargar la información de la mascota');
-        setIsCargando(false);
-        return;
+      if ( !tipoProfesional || tipoProfesional === 'tienda' ) {
+        if(!usuario?.uid || !id){
+          setError('No se pudo cargar la información de la mascota');
+          setIsCargando(false);
+          return;
+        }
       }
 
       try {
         setIsCargando(true);
         const datosUsuario = await obtenerUsuarioPorUid(usuario.uid);
         
-        if (!datosUsuario?.infoMascotas) {
-          setError('No se encontraron mascotas');
-          setIsCargando(false);
-          return;
+        if(tipoProfesional === 'tienda'){
+          if (!datosUsuario?.infoMascotas) {
+            setError('No se encontraron mascotas');
+            setIsCargando(false);
+            return;
+          }
         }
 
         // Buscar la mascota por ID

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, getDataById } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
+import typeProfesionalStore from '../service/zustand';
 
 // Este componente no recibe props
 const LoginProfesional = () => {
@@ -14,7 +15,7 @@ const LoginProfesional = () => {
   });
   const [isCargando, setIsCargando] = useState(false);
   const [error, setError] = useState('');
-
+  const { setTypeProfesional } = typeProfesionalStore();
   // Redirigir si ya está autenticado
  /*  useEffect(() => {
     if (isAutenticado) {
@@ -45,7 +46,10 @@ const LoginProfesional = () => {
         setIsCargando(false);
         return;
       }
-
+      console.log(profesionalDoc.tipoProfesional,'profesionalDoc');
+      setTypeProfesional(profesionalDoc.tipoProfesional)
+      console.log('tipo de profesional cargado en zustand');
+      
       console.log('Profesional autenticado exitosamente:', userCredential.user);
       navigate('/dashboardProfesional');
       

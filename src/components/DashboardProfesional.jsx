@@ -38,6 +38,9 @@ const DashboardProfesional = () => {
     cargarDatosProfesional();
   }, [usuario?.uid]);
 
+// almacenar id de la mascota para luego puedo ver el perfil
+// de la mascota y editarlo desde el dashboard de veterinario o peluquero
+
   // Función para cerrar sesión
   const handleCerrarSesion = async () => {
     try {
