@@ -10,23 +10,27 @@ export const FormularioCitaVeterinaria = ({
 }) => {
   const { usuario, datosUsuario } = useAuth();
   
-  const [formData, setFormData] = useState({
-    clinicaId: clinica.id,
-    clinicaNombre: clinica.nombre,
-    mascotaId: mascotas[0]?.id || 0,
-    mascotaNombre: mascotas[0]?.nombre || '',
-    fecha: '',
-    hora: '',
-    tipoConsulta: '',
-    sintomas: '',
-    urgencia: 'normal',
-    observaciones: '',
-    telefonoContacto: datosUsuario?.telefono || '',
-    // Datos del cliente
-    clienteId: usuario?.uid || '',
-    clienteNombre: datosUsuario?.nombre || datosUsuario?.displayName || '',
-    clienteEmail: usuario?.email || ''
-  });
+ // ... existing code ...
+const [formData, setFormData] = useState({
+  clinicaId: clinica.id,
+  clinicaNombre: clinica.nombre,
+  // Agregar este campo para que coincida con el Dashboard
+  veterinariaNombre: clinica.nombre,
+  mascotaId: mascotas[0]?.id || 0,
+  mascotaNombre: mascotas[0]?.nombre || '',
+  fecha: '',
+  hora: '',
+  tipoConsulta: '',
+  sintomas: '',
+  urgencia: 'normal',
+  observaciones: '',
+  telefonoContacto: datosUsuario?.telefono || '',
+  // Datos del cliente
+  clienteId: usuario?.uid || '',
+  clienteNombre: datosUsuario?.nombre || datosUsuario?.displayName || '',
+  clienteEmail: usuario?.email || ''
+});
+// ... existing code ...
 
   const [isCargando, setIsCargando] = useState(false);
   const [errores, setErrores] = useState({});

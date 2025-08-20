@@ -945,3 +945,101 @@ export const eliminarArchivo = async (urlArchivo) => {
     throw error;
   }
 };
+
+
+
+// ... existing code ...
+
+/**
+ * Elimina una cita del array de citas de un usuario
+ * @param {string} usuarioId - ID del usuario
+ * @param {string} citaId - ID de la cita a eliminar
+ * @returns {Promise<void>}
+ */
+export const eliminarCitaDeUsuario = async (usuarioId, citaId) => {
+  try {
+    // Primero obtener el usuario actual
+    const usuario = await getDataById('usuarios', usuarioId);
+    
+    if (!usuario || !usuario.citas) {
+      throw new Error('Usuario no encontrado o sin citas');
+    }
+    
+    // Filtrar la cita a eliminar
+    const citasActualizadas = usuario.citas.filter(cita => cita.id !== citaId);
+    
+    // Actualizar el documento del usuario
+    await updateDataCollection('usuarios', usuarioId, {
+      citas: citasActualizadas
+    });
+    
+    console.log(`Cita ${citaId} eliminada del usuario ${usuarioId}`);
+  } catch (error) {
+    console.error('Error al eliminar cita del usuario:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina una cita del array de citas de un profesional
+ * @param {string} profesionalId - ID del profesional
+ * @param {string} citaId - ID de la cita a eliminar
+ * @returns {Promise<void>}
+ */
+export const eliminarCitaDeProfesional = async (profesionalId, citaId) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.citas) {
+      throw new Error('Profesional no encontrado o sin citas');
+    }
+    
+    // Filtrar la cita a eliminar
+    const citasActualizadas = profesional.citas.filter(cita => cita.id !== citaId);
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      citas: citasActualizadas
+    });
+    
+    console.log(`Cita ${citaId} eliminada del profesional ${profesionalId}`);
+  } catch (error) {
+    console.error('Error al eliminar cita del profesional:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina una cita completamente (tanto del usuario como del profesional)
+ * @param {Object} cita - Objeto de la cita con toda la información
+ * @returns {Promise<void>}
+ */
+export const eliminarCitaCompleta = async (cita) => {
+  try {
+    const promesas = [];
+    
+    // Eliminar del usuario
+    if (cita.clienteId) {
+      promesas.push(eliminarCitaDeUsuario(cita.clienteId, cita.id));
+    }
+    
+    // Eliminar del profesional (veterinario o peluquero)
+    if (cita.clinicaId) {
+      promesas.push(eliminarCitaDeProfesional(cita.clinicaId, cita.id));
+    }
+    if (cita.peluqueriaId) {
+      promesas.push(eliminarCitaDeProfesional(cita.peluqueriaId, cita.id));
+    }
+    
+    // Ejecutar todas las eliminaciones en paralelo
+    await Promise.all(promesas);
+    
+    console.log(`Cita ${cita.id} eliminada completamente`);
+  } catch (error) {
+    console.error('Error al eliminar cita completa:', error);
+    throw error;
+  }
+};
+
+// ... existing code ...

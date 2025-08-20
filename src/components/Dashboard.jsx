@@ -6,7 +6,9 @@ import { FormularioCitaVeterinaria } from './FormularioCitaVeterinaria';
 import { FormularioCitaPeluqueria } from './FormularioCitaPeluqueria';
 import Peluquerias from './Peluquerias';
 import Veterinarias from './Veterinarias';
-import { agregarMascotaAUsuario, obtenerUsuarioPorUid, obtenerProfesionalesPorTipo, eliminarCita, actualizarCita } from '../data/firebase/firebase';
+import { agregarMascotaAUsuario, obtenerUsuarioPorUid,
+   obtenerProfesionalesPorTipo, eliminarCita, actualizarCita, 
+   eliminarCitaCompleta } from '../data/firebase/firebase';
 import { FormularioMascota } from './FormularioMascota';
 import Tiendas from './Tiendas';
 import { useTheme } from '../contexts/ThemeContext';
@@ -88,6 +90,8 @@ const Dashboard = () => {
     telefono: profesional.telefono,
   });
 
+
+
     // Función para cargar profesionales
   const cargarProfesionales = async () => {
     setIsCargandoVeterinarios(true);
@@ -133,6 +137,15 @@ const Dashboard = () => {
     }
   };
 
+    // Estado para forzar re-render de citas
+    const [citasActualizadas, setCitasActualizadas] = useState(false);
+
+    // Función para marcar citas como actualizadas
+    const marcarCitasActualizadas = () => {
+      setCitasActualizadas(prev => !prev);
+    };
+
+
   // Funciones para manejar los formularios
   const manejarAbrirFormularioVeterinaria = (clinica) => {
     setClinicaSeleccionada(clinica);
@@ -150,6 +163,9 @@ const Dashboard = () => {
     alert('¡Cita veterinaria agendada exitosamente!');
     setMostrarFormularioVeterinaria(false);
     setClinicaSeleccionada(null);
+   // Marcar que las citas se actualizaron
+   marcarCitasActualizadas();
+
   };
 
   const manejarEnviarCitaPeluqueria = (datosCita) => {
@@ -158,6 +174,8 @@ const Dashboard = () => {
     alert('¡Cita de peluquería reservada exitosamente!');
     setMostrarFormularioPeluqueria(false);
     setPeluqueriaSeleccionada(null);
+    // Marcar que las citas se actualizaron
+    marcarCitasActualizadas();
   };
 
   // Función para cargar datos del usuario desde Firestore
@@ -178,50 +196,40 @@ const Dashboard = () => {
   // Cargar datos del usuario cuando el componente se monta
   useEffect(() => {
     cargarDatosUsuario();
-  }, [usuario?.uid]);
+  }, [usuario?.uid, citasActualizadas]);
   
 
-  // Función para cancelar una cita
-  const handleCancelarCita = async (cita) => {
-    if (!confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
-      return;
-    }
+// Función para cancelar una cita
+const handleCancelarCita = async (cita) => {
+  if (!confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
+    return;
+  }
 
+  // Agregar la cita al set de citas cancelando
+  setCitasCancelando(prev => new Set(prev).add(cita.id));
+
+  try {
+    // Usar la nueva función que elimina la cita completamente
+    await eliminarCitaCompleta(cita);
     
-    // Agregar la cita al set de citas cancelando
-    setCitasCancelando(prev => new Set(prev).add(cita.id));
-
-    try {
-      if (cita.id) {
-        // Si la cita tiene un ID de Firebase, la eliminamos directamente
-        await eliminarCita(cita.id);
-        console.log('Cita eliminada de Firebase:', cita.id);
-      } else {
-        // Si no tiene ID (cita local), la marcamos como cancelada
-        await actualizarCita(cita.id || Date.now().toString(), {
-          ...cita,
-          estado: 'cancelada',
-          fechaCancelacion: new Date()
-        });
-        console.log('Cita marcada como cancelada:', cita);
-      }
-
-      // Recargar datos del usuario para actualizar la UI
-      await cargarDatosUsuario();
-      
-      alert('Cita cancelada exitosamente');
-    } catch (error) {
-      console.error('Error al cancelar cita:', error);
-      alert('Error al cancelar la cita. Inténtalo de nuevo.');
-    } finally {
-      // Remover la cita del set de citas cancelando
-      setCitasCancelando(prev => {
-        const nuevoSet = new Set(prev);
-        nuevoSet.delete(cita.id);
-        return nuevoSet;
-      });
-    }
-  };
+    // Recargar datos del usuario para actualizar la UI
+    await cargarDatosUsuario();
+    
+    alert('Cita cancelada exitosamente');
+     // Marcar que las citas se actualizaron
+   marcarCitasActualizadas();
+  } catch (error) {
+    console.error('Error al cancelar cita:', error);
+    alert('Error al cancelar la cita. Inténtalo de nuevo.');
+  } finally {
+    // Remover la cita del set de citas cancelando
+    setCitasCancelando(prev => {
+      const nuevoSet = new Set(prev);
+      nuevoSet.delete(cita.id);
+      return nuevoSet;
+    });
+  }
+};
 
   // Función para agregar mascota usando la función centralizada
   const handleAgregarMascota = async (mascota) => {
@@ -427,8 +435,16 @@ const Dashboard = () => {
                         <div className="flex-1">
                           <div className="flex items-center space-x-4">
                             <div className="flex-shrink-0">
-                              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                                cita.tipoProfesional === 'veterinario' 
+                                  ? 'bg-blue-100' 
+                                  : 'bg-purple-100'
+                              }`}>
+                                <svg className={`w-6 h-6 ${
+                                  cita.tipoProfesional === 'veterinario' 
+                                    ? 'text-blue-600' 
+                                    : 'text-purple-600'
+                                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                               </div>
@@ -443,17 +459,46 @@ const Dashboard = () => {
                               <p className="text-xs text-gray-500">
                                 {cita.peluqueriaNombre || cita.veterinariaNombre || 'Profesional no especificado'}
                               </p>
+                              {/* Detalles específicos según el tipo de cita */}
                               <div className="mt-1">
-                                {cita.servicios && cita.servicios.length > 0 && (
-                                  <p className="text-xs text-gray-600">
-                                    Servicios: {cita.servicios.join(', ')}
-                                  </p>
+                                {/* Detalles de Peluquería */}
+                                {cita.tipoProfesional === 'peluquero' && (
+                                  <>
+                                    {cita.servicios && cita.servicios.length > 0 && (
+                                      <p className="text-xs text-gray-600">
+                                        Servicios: {cita.servicios.join(', ')}
+                                      </p>
+                                    )}
+                                    {cita.tipoCorte && (
+                                      <p className="text-xs text-gray-600">
+                                        Tipo: {cita.tipoCorte}
+                                      </p>
+                                    )}
+                                  </>
                                 )}
-                                {cita.tipoCorte && (
-                                  <p className="text-xs text-gray-600">
-                                    Tipo: {cita.tipoCorte}
-                                  </p>
+                                
+                                {/* Detalles de Veterinaria */}
+                                {cita.tipoProfesional === 'veterinario' && (
+                                  <>
+                                    {cita.tipoConsulta && (
+                                      <p className="text-xs text-gray-600">
+                                        Consulta: {cita.tipoConsulta}
+                                      </p>
+                                    )}
+                                    {cita.sintomas && (
+                                      <p className="text-xs text-gray-600">
+                                        Síntomas: {cita.sintomas}
+                                      </p>
+                                    )}
+                                    {cita.urgencia && cita.urgencia !== 'normal' && (
+                                      <p className="text-xs text-gray-600">
+                                        Urgencia: {cita.urgencia}
+                                      </p>
+                                    )}
+                                  </>
                                 )}
+                                
+                                {/* Observaciones (comunes a ambos tipos) */}
                                 {cita.observaciones && (
                                   <p className="text-xs text-gray-500 italic">
                                     Obs: {cita.observaciones}
@@ -469,9 +514,21 @@ const Dashboard = () => {
                                 }`}>
                                   {cita.estado}
                                 </span>
+                                {/* Etiquetas específicas */}
                                 {cita.esPrimeraVisita && (
                                   <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 ml-2">
                                     Primera visita
+                                  </span>
+                                )}
+                                
+                                {/* Etiqueta de urgencia para veterinaria */}
+                                {cita.tipoProfesional === 'veterinario' && cita.urgencia && cita.urgencia !== 'normal' && (
+                                  <span className={`inline-block px-2 py-1 text-xs rounded-full ml-2 ${
+                                    cita.urgencia === 'urgente' ? 'bg-yellow-100 text-yellow-800' :
+                                    cita.urgencia === 'emergencia' ? 'bg-red-100 text-red-800' :
+                                    'bg-gray-100 text-gray-800'
+                                  }`}>
+                                    {cita.urgencia}
                                   </span>
                                 )}
                               </div>
