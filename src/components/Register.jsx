@@ -16,6 +16,8 @@ const Register = () => {
     email: '',
     telefono: '',
     direccion: '',
+    zona: 'norte',
+    barrio: '',
     password: '',
     confirmPassword: ''
   });
@@ -71,6 +73,11 @@ const Register = () => {
         email: formData.email,
         telefono: formData.telefono,
         direccion: formData.direccion,
+        ubicacion: {
+          zona: formData.zona,
+          barrio: formData.barrio,
+          direccion: formData.direccion
+        },
         rol: 'usuario', // Rol por defecto
         fechaRegistro: new Date()
       });
@@ -268,6 +275,57 @@ const Register = () => {
                 />
               </div>
               </div>
+
+            {/* Campo Zona */}
+            <div className="relative">
+              <label htmlFor="zona" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Zona
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                <select
+                  id="zona"
+                  name="zona"
+                  required
+                  className="appearance-none relative block w-full pl-7 sm:pl-8 pr-8 py-2 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-lg transition-all duration-200 text-sm"
+                  value={formData.zona}
+                  onChange={handleChange}
+                  disabled={isCargando}
+                >
+                  <option value="norte">Zona Norte</option>
+                  <option value="sur">Zona Sur</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Campo Barrio */}
+            <div className="relative">
+              <label htmlFor="barrio" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Barrio
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  </svg>
+                </div>
+                <input
+                  id="barrio"
+                  name="barrio"
+                  type="text"
+                  required
+                  className="appearance-none relative block w-full pl-7 sm:pl-8 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-lg transition-all duration-200 text-sm"
+                  placeholder="Tu barrio"
+                  value={formData.barrio}
+                  onChange={handleChange}
+                  disabled={isCargando}
+                />
+              </div>
+            </div>
 
             
             {/* Campo Contraseña */}

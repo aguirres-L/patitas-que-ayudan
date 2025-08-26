@@ -58,6 +58,8 @@ const RegisterProfesional = () => {
     tipoProfesional: 'veterinario', // 'veterinario' o 'peluquero'
     especialidad: '',
     direccion: '',
+    zona: 'norte',
+    barrio: '',
     horario: '',
     experiencia: '',
     licencia: ''
@@ -114,6 +116,11 @@ const RegisterProfesional = () => {
         tipoProfesional: formData.tipoProfesional,
         especialidad: formData.especialidad,
         direccion: formData.direccion,
+        ubicacion: {
+          zona: formData.zona,
+          barrio: formData.barrio,
+          direccion: formData.direccion
+        },
         horario: formData.horario,
         experiencia: formData.experiencia,
         licencia: formData.licencia,
@@ -403,6 +410,43 @@ const RegisterProfesional = () => {
               className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               placeholder="Av. Principal 123, Ciudad"
               value={formData.direccion}
+              onChange={handleChange}
+              disabled={isRegistrando}
+            />
+          </div>
+
+          {/* Zona */}
+          <div>
+            <label htmlFor="zona" className="block text-sm font-medium text-gray-700 mb-2">
+              Zona
+            </label>
+            <select
+              id="zona"
+              name="zona"
+              required
+              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              value={formData.zona}
+              onChange={handleChange}
+              disabled={isRegistrando}
+            >
+              <option value="norte">Zona Norte</option>
+              <option value="sur">Zona Sur</option>
+            </select>
+          </div>
+
+          {/* Barrio */}
+          <div>
+            <label htmlFor="barrio" className="block text-sm font-medium text-gray-700 mb-2">
+              Barrio
+            </label>
+            <input
+              id="barrio"
+              name="barrio"
+              type="text"
+              required
+              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              placeholder="Tu barrio"
+              value={formData.barrio}
               onChange={handleChange}
               disabled={isRegistrando}
             />
