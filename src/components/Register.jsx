@@ -79,6 +79,7 @@ const Register = () => {
           direccion: formData.direccion
         },
         rol: 'usuario', // Rol por defecto
+        isMember: true,
         fechaRegistro: new Date()
       });
 
@@ -278,27 +279,34 @@ const Register = () => {
 
             {/* Campo Zona */}
             <div className="relative">
-              <label htmlFor="zona" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Zona
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                  <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-                <select
-                  id="zona"
-                  name="zona"
-                  required
-                  className="appearance-none relative block w-full pl-7 sm:pl-8 pr-8 py-2 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:shadow-lg transition-all duration-200 text-sm"
-                  value={formData.zona}
-                  onChange={handleChange}
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, zona: 'norte' })}
                   disabled={isCargando}
+                  className={`p-2 text-xs sm:text-sm rounded-lg border transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    formData.zona === 'norte'
+                      ? 'border-orange-500 bg-orange-50 text-orange-700'
+                      : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                  }`}
                 >
-                  <option value="norte">Zona Norte</option>
-                  <option value="sur">Zona Sur</option>
-                </select>
+                  Zona Norte
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, zona: 'sur' })}
+                  disabled={isCargando}
+                  className={`p-2 text-xs sm:text-sm rounded-lg border transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    formData.zona === 'sur'
+                      ? 'border-orange-500 bg-orange-50 text-orange-700'
+                      : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                  }`}
+                >
+                  Zona Sur
+                </button>
               </div>
             </div>
 

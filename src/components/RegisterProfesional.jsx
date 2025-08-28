@@ -417,21 +417,35 @@ const RegisterProfesional = () => {
 
           {/* Zona */}
           <div>
-            <label htmlFor="zona" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Zona
             </label>
-            <select
-              id="zona"
-              name="zona"
-              required
-              className="appearance-none relative block w-full px-3 py-2 border border-gray-300 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-              value={formData.zona}
-              onChange={handleChange}
-              disabled={isRegistrando}
-            >
-              <option value="norte">Zona Norte</option>
-              <option value="sur">Zona Sur</option>
-            </select>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, zona: 'norte' })}
+                disabled={isRegistrando}
+                className={`p-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  formData.zona === 'norte'
+                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                }`}
+              >
+                Zona Norte
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, zona: 'sur' })}
+                disabled={isRegistrando}
+                className={`p-2 text-sm rounded-lg border transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  formData.zona === 'sur'
+                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                }`}
+              >
+                Zona Sur
+              </button>
+            </div>
           </div>
 
           {/* Barrio */}

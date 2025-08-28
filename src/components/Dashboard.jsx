@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Navbar } from './Navbar';
@@ -36,6 +36,10 @@ const Dashboard = () => {
   const [isCargandoVeterinarios, setIsCargandoVeterinarios] = useState(false);
   const [isCargandoPeluqueros, setIsCargandoPeluqueros] = useState(false);
   const [citasCancelando, setCitasCancelando] = useState(new Set()); // Para controlar qué citas se están cancelando
+  // Filtro por zona
+  const [mostrarTodosProfesionales, setMostrarTodosProfesionales] = useState(false);
+  const [veterinariosRaw, setVeterinariosRaw] = useState([]);
+  const [peluquerosRaw, setPeluquerosRaw] = useState([]);
 
   // Datos simulados de mascotas del usuario
   const mascotasUsuario = [
@@ -100,11 +104,13 @@ const Dashboard = () => {
     try {
       // Cargar veterinarios
       const veterinariosData = await obtenerProfesionalesPorTipo('veterinario');
+      setVeterinariosRaw(veterinariosData);
       const veterinariosMapeados = veterinariosData.map(mapearProfesionalAVeterinaria);
       setVeterinarios(veterinariosMapeados);
       
       // Cargar peluqueros
       const peluquerosData = await obtenerProfesionalesPorTipo('peluquero');
+      setPeluquerosRaw(peluquerosData);
       const peluquerosMapeados = peluquerosData.map(mapearProfesionalAPeluqueria);
       setPeluqueros(peluquerosMapeados);
 
@@ -197,6 +203,24 @@ const Dashboard = () => {
   useEffect(() => {
     cargarDatosUsuario();
   }, [usuario?.uid, citasActualizadas]);
+  
+  // Zona del usuario desde Firestore
+  const zonaUsuario = datosUsuario?.ubicacion?.zona;
+
+  // Listas filtradas según zona y toggle "ver todos"
+  const veterinariosParaMostrar = useMemo(() => {
+    const fuente = (mostrarTodosProfesionales || !zonaUsuario) 
+      ? veterinariosRaw 
+      : veterinariosRaw.filter((p) => p?.ubicacion?.zona === zonaUsuario);
+    return fuente.map(mapearProfesionalAVeterinaria);
+  }, [veterinariosRaw, mostrarTodosProfesionales, zonaUsuario]);
+
+  const peluquerosParaMostrar = useMemo(() => {
+    const fuente = (mostrarTodosProfesionales || !zonaUsuario) 
+      ? peluquerosRaw 
+      : peluquerosRaw.filter((p) => p?.ubicacion?.zona === zonaUsuario);
+    return fuente.map(mapearProfesionalAPeluqueria);
+  }, [peluquerosRaw, mostrarTodosProfesionales, zonaUsuario]);
   
 
 // Función para cancelar una cita
@@ -584,16 +608,49 @@ const handleCancelarCita = async (cita) => {
           </button>
         </div> */}
 
+        {/* Filtro de profesionales por zona */}
+        <div className="flex items-center justify-between mb-4">
+          <div className={typeTheme === 'light' ? 'text-m text-gray-700' : 'text-m text-white'}>
+            {zonaUsuario ? `Tu zona: ${zonaUsuario}` : 'Sin zona definida'}
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setMostrarTodosProfesionales(false)}
+              disabled={isCargandoVeterinarios || isCargandoPeluqueros}
+              className={`px-3 py-1.5 text-sm rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                !mostrarTodosProfesionales
+                  ? 'border-orange-500 bg-orange-50 text-orange-700'
+                  : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+              }`}
+            >
+              Mi zona
+            </button>
+            <button
+              type="button"
+              onClick={() => setMostrarTodosProfesionales(true)}
+              disabled={isCargandoVeterinarios || isCargandoPeluqueros}
+              className={`px-3 py-1.5 text-sm rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                mostrarTodosProfesionales
+                  ? 'border-orange-500 bg-orange-50 text-orange-700'
+                  : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+              }`}
+            >
+              Ver todos
+            </button>
+          </div>
+        </div>
+
         {/* Sección de Clínicas Veterinarias */}
         <Veterinarias 
-          clinicasVeterinarias={veterinarios} 
+          clinicasVeterinarias={veterinariosParaMostrar} 
           manejarAbrirFormularioVeterinaria={manejarAbrirFormularioVeterinaria}
           isCargando={isCargandoVeterinarios}
         />
 
         {/* Sección de Peluquerías */}
         <Peluquerias 
-          peluquerias={peluqueros} 
+          peluquerias={peluquerosParaMostrar} 
           manejarAbrirFormularioPeluqueria={manejarAbrirFormularioPeluqueria}
           isCargando={isCargandoPeluqueros}
         />

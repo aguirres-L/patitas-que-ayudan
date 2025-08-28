@@ -17,6 +17,8 @@ import GroomerDashboard from './components/GroomerDashboard';
 import UserSettings from './components/UserSettings';
 import About from './components/Home/About';
 import ProtectedRouteAdmin from './components/ProtectedRouteAdmin';
+import ProtectedRouteMember from './components/ProtectedRouteMember';
+import AccesoBloqueado from './components/AccesoBloqueado';
 
 function App() {
   return (
@@ -37,13 +39,18 @@ function App() {
               <Route path="/register-profesional" element={<RegisterProfesional />} />
               <Route path="/about" element={<About />} />
               
-
-              
-              {/* Rutas protegidas */}
-              <Route path="/dashboard" element={
+              {/* Ruta de acceso bloqueado */}
+              <Route path="/acceso-bloqueado" element={
                 <ProtectedRoute>
-                  <DashboardSelector />
+                  <AccesoBloqueado />
                 </ProtectedRoute>
+              } />
+              
+              {/* Rutas protegidas que requieren membresía activa */}
+              <Route path="/dashboard" element={
+                <ProtectedRouteMember>
+                  <DashboardSelector />
+                </ProtectedRouteMember>
               } />
               <Route path="/dashboard-admin" element={
                 <ProtectedRouteAdmin>
@@ -56,24 +63,24 @@ function App() {
                 </ProtectedRouteProfesional>
               } />
               <Route path="/pet-profile/:id" element={
-                <ProtectedRoute>
+                <ProtectedRouteMember>
                   <PetProfile />
-                </ProtectedRoute>
+                </ProtectedRouteMember>
               } />
               <Route path="/vet" element={
-                <ProtectedRoute>
+                <ProtectedRouteMember>
                   <VetDashboard />
-                </ProtectedRoute>
+                </ProtectedRouteMember>
               } />
               <Route path="/groomer" element={
-                <ProtectedRoute>
+                <ProtectedRouteMember>
                   <GroomerDashboard />
-                </ProtectedRoute>
+                </ProtectedRouteMember>
               } />
               <Route path="/settings" element={
-                <ProtectedRoute>
+                <ProtectedRouteMember>
                   <UserSettings />
-                </ProtectedRoute>
+                </ProtectedRouteMember>
               } />
             </Routes>
           </AuthProvider>
