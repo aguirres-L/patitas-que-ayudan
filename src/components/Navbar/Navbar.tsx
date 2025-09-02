@@ -6,6 +6,8 @@ import { SvgSol } from '../ui/svg/SvgSol';
 import { SvgLuna } from '../ui/svg/SvgLuna';
 import { SvgSolDark } from '../ui/svg/SvgSolDark';
 import { SvgLunaDark } from '../ui/svg/SvgLunaDark';
+import Campana from '../ui/svg/Campana';
+import { NotificacionesChapitas } from '../NotificacionesChapitas';
 
 
 
@@ -33,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navigate = useNavigate();
   const { usuario, datosUsuario } = useAuth();
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [notificacionesAbiertas, setNotificacionesAbiertas] = useState(false);
 
   const { typeTheme, toggleTheme } = useTheme();
   
@@ -186,7 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </svg>
         </button>
         {/* Menú links */}
-        <div className={`flex-col sm:flex-row sm:flex space-y-2 sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto  shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+        <div className={`flex-col sm:flex-row sm:flex sm:space-y-0 sm:space-x-4 absolute sm:static top-16 left-0 w-full sm:w-auto ${typeTheme === 'dark' ? 'bg-gray-900/95' : 'bg-white/95'} backdrop-blur-sm shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
          
           {/* Enlace al dashboard admin para usuarios admin */}
           {datosUsuario?.rol === 'admin' && (
@@ -215,6 +218,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               {typeTheme === 'light' ? <SvgLunaDark /> : <SvgSol/>}
             </button>
           )}
+          
+          {/* apartado para las notificaciones de las chapitas */}
+          {mostrarConfiguracion && usuario && (
+            <div className="relative">
+              <button
+                onClick={() => setNotificacionesAbiertas(!notificacionesAbiertas)}
+                className={typeTheme === 'dark'
+                  ? 'text-gray-200 hover:text-orange-400 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'
+                  : 'text-gray-600 hover:text-orange-600 transition-colors duration-200 text-sm px-4 py-2 flex items-center gap-2'}
+                aria-label="Notificaciones de las chapitas"
+              >
+                <Campana/>
+              </button>
+              
+              {/* Dropdown de notificaciones */}
+              <NotificacionesChapitas
+                isAbierto={notificacionesAbiertas}
+                onCerrar={() => setNotificacionesAbiertas(false)}
+                typeTheme={typeTheme}
+              />
+            </div>
+          )}
+
           {mostrarCerrarSesion && (
             <button 
               onClick={handleCerrarSesion}

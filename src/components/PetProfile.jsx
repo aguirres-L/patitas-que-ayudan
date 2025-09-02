@@ -6,6 +6,7 @@ import { obtenerUsuarioPorUid } from '../data/firebase/firebase';
 import { SistemaCitas } from './SistemaCitas';
 import { EditarMascota } from './EditarMascota';
 import typeProfesionalStore from '../service/zustand';
+import MetodoDePago from './metodoDePago/MetodoDePago';
 
 // Este componente recibe props a través de useParams
 const PetProfile = () => {
@@ -23,7 +24,7 @@ const PetProfile = () => {
   const [isGuardando, setIsGuardando] = useState(false);
 
   const [modalAbierto, setModalAbierto] = useState(false);
-
+  const [openMetodoPago, setOpenMetodoPago] = useState(false);
 
   // Cargar datos de la mascota específica
   useEffect(() => {
@@ -74,6 +75,12 @@ const PetProfile = () => {
 
     cargarMascota();
   }, [usuario?.uid, id]);
+
+
+  const handleMetodoPago = () => {
+    setOpenMetodoPago(!openMetodoPago);
+  }
+
 
   // Si está cargando, mostrar spinner
   if (isCargando) {
@@ -252,7 +259,7 @@ const PetProfile = () => {
               >
                 Información
               </button>
-              <button 
+         {/*      <button 
                 onClick={() => setPestañaActiva('historial')}
                 className={`pb-2 font-medium transition-colors duration-200 whitespace-nowrap ${
                   pestañaActiva === 'historial' 
@@ -261,7 +268,7 @@ const PetProfile = () => {
                 }`}
               >
                 Historial Médico
-              </button>
+              </button> */}
               <button 
                 onClick={() => setPestañaActiva('cuidados')}
                 className={`pb-2 font-medium transition-colors duration-200 whitespace-nowrap ${
@@ -346,21 +353,20 @@ const PetProfile = () => {
 
               {/* QR */}
               <div className="flex flex-col items-center bg-white/60 rounded-lg p-6 shadow-sm">
-                <div className="bg-white p-4 rounded-lg shadow-md mb-4">
-                  <img src="/qr-code.png" alt="QR" className="w-48 h-48" />
+                <div className="p-4 mb-4">
+                  <img src={mascota.fotoUrl} style={{borderRadius:'50% '}} alt="QR" className="w-48 h-48 object-cover  " />
                 </div>
-                <div className="text-center mb-4">
+                {/* <div className="text-center mb-4">
                   <p className="text-xs text-gray-500 mb-2">URL pública para compartir:</p>
                   <div className="bg-gray-100 rounded p-2 text-xs font-mono break-all">
                     {window.location.origin}/pet/{mascota.id}
                   </div>
-                </div>
-                <button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-lg transform hover:scale-105">
-                  Descargar QR
+                </div> */}
+                <button onClick={handleMetodoPago} className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-lg transform hover:scale-105">
+                  Quiero una chapita para  {mascota.nombre}
                 </button>
                 <p className="text-sm text-gray-500 mt-3 text-center">
-                  Escanea este código si encuentras a {mascota.nombre} perdido
-                </p>
+                  {mascota.estadoChapita === true ? 'La chapita para ' + mascota.nombre + '  esta en produccion' : 'La chapita para ' + mascota.nombre + '  ya esta disponible'}</p>
               </div>
             </div>
           )}
@@ -457,6 +463,34 @@ const PetProfile = () => {
           </div>
         </div>
       )}
+
+
+{openMetodoPago && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Chapita para {mascota.nombre}
+                </h3>
+                <button
+                  onClick={() => setOpenMetodoPago(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+              <MetodoDePago 
+                mascotaNombre={mascota.nombre}
+                monto={5000} // Puedes hacer esto dinámico
+                onCerrar={() => setOpenMetodoPago(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 };

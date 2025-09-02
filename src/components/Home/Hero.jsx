@@ -1,4 +1,5 @@
 import SliderHome from "./slider/SliderHome";
+import HistoriasRescates from "./HistoriasRescates.jsx";
 
 export default function Hero(){
     return(
@@ -99,13 +100,15 @@ export default function Hero(){
           </div>
           
                      {/* Precio destacado */}
-           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl max-w-md mx-auto mb-8">
+      {/*      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl max-w-md mx-auto mb-8">
              <div className="text-center">
                <p className="text-sm text-gray-600 mb-2">Chapita de acero grabada con láser</p>
                <div className="text-3xl font-bold text-orange-600 mb-2">$7.000</div>
                <p className="text-sm text-gray-500">Identificación permanente incluida</p>
              </div>
-           </div>
+           </div> */}
+
+           <HistoriasRescates/>
         </div>
       </section>
     )

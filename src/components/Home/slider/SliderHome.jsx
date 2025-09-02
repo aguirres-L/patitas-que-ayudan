@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // imagenes macotas 
 import uno from "../../../assets/7.png"
@@ -140,9 +140,19 @@ function ImageSlider({ imagenes, imagenAlt }) {
 
 export default function SliderHome() {
   const [slideActual, setSlideActual] = useState(0);
+  const scrollContainerRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const irASlide = (indice) => {
     setSlideActual(indice);
+    // Scroll automático al slide seleccionado
+    if (scrollContainerRef.current) {
+      const slideWidth = scrollContainerRef.current.offsetWidth;
+      scrollContainerRef.current.scrollTo({
+        left: indice * slideWidth,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const slideAnterior = () => {
@@ -155,12 +165,57 @@ export default function SliderHome() {
     irASlide(nuevoIndice);
   };
 
+  // Detectar scroll para actualizar slide actual
+  const handleScroll = () => {
+    if (!scrollContainerRef.current || isScrolling) return;
+    
+    const container = scrollContainerRef.current;
+    const slideWidth = container.offsetWidth;
+    const scrollLeft = container.scrollLeft;
+    const newSlideIndex = Math.round(scrollLeft / slideWidth);
+    
+    if (newSlideIndex !== slideActual) {
+      setSlideActual(newSlideIndex);
+    }
+  };
+
+  // Scroll automático al slide actual cuando cambie
+  useEffect(() => {
+    if (scrollContainerRef.current && !isScrolling) {
+      const slideWidth = scrollContainerRef.current.offsetWidth;
+      scrollContainerRef.current.scrollTo({
+        left: slideActual * slideWidth,
+        behavior: 'smooth'
+      });
+    }
+  }, [slideActual]);
+
   const slideActualData = datosSlides[slideActual];
 
   return (
-    <section className="relative md:py-16  sm:py-6 lg:py-8">
-      <div   className="container mx-auto px-4 sm:px-6 lg:px-1">
-        <div  className="max-w-7xl mx-auto">
+    <section className="relative md:py-16 sm:py-6 lg:py-8">
+      {/* Estilos CSS personalizados para scroll horizontal */}
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .snap-x {
+          scroll-snap-type: x mandatory;
+        }
+        .snap-start {
+          scroll-snap-align: start;
+        }
+        .scroll-smooth {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-1">
+        <div className="max-w-7xl mx-auto">
           {/* Título de la sección */}
           <div className="text-center mb-4 sm:mb-2 lg:mb-8">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-6 sm:mb-3">
@@ -173,89 +228,167 @@ export default function SliderHome() {
 
           {/* Contenedor del slider */}
           <div className="relative bg-white rounded-xl mb-8 sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
-            <div className="flex flex-col lg:flex-row min-h-[600px] sm:min-h-[650px] lg:min-h-[500px]">
-              {/* Imagen (izquierda en desktop, arriba en móvil) */}
-              <div className="w-full h-[350px] sm:h-[400px] lg:w-1/2 lg:h-auto relative overflow-hidden">
+            {/* Versión móvil con scroll horizontal */}
+            <div className="lg:hidden">
+              <div 
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth"
+                style={{ 
+                  scrollbarWidth: 'none', 
+                  msOverflowStyle: 'none',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
+                {datosSlides.map((slide, index) => (
+                  <div 
+                    key={slide.id}
+                    className="flex-shrink-0 w-full snap-start"
+                    style={{ minWidth: '100%' }}
+                  >
+                    <div className="flex flex-col min-h-[650px]">
+                      {/* Imagen */}
+                      <div className="h-[350px] sm:h-[400px] relative overflow-hidden">
+                        <ImageSlider 
+                          imagenes={slide.imagenUrl} 
+                          imagenAlt={slide.imagenAlt}
+                        />
+                      </div>
+
+                      {/* Contenido */}
+                      <div className="p-4 sm:p-6 flex flex-col justify-center flex-1">
+                        <div className="space-y-4 sm:space-y-6">
+                          {/* Header con número y indicadores */}
+                          <div className="flex flex-row items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xl sm:text-2xl font-bold text-orange-500">
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
+                              <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
+                            </div>
+                            
+                            {/* Indicador de progreso */}
+                            <div className="flex items-center space-x-2">
+                              <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-orange-500 rounded-full transition-all duration-500 ease-out"
+                                  style={{ 
+                                    width: `${((index + 1) / datosSlides.length) * 100}%`
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Título */}
+                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
+                            {slide.titulo}
+                          </h3>
+
+                          {/* Descripción */}
+                          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                            {slide.descripcion}
+                          </p>
+
+                          {/* Características */}
+                          <ul className="space-y-2 sm:space-y-3">
+                            {slide.caracteristicas.map((caracteristica, idx) => (
+                              <li key={idx} className="flex items-start space-x-2 sm:space-x-3">
+                                <span className="text-orange-500 text-base sm:text-lg mt-0.5 flex-shrink-0">
+                                  {idx === 0 ? '✨' : idx === 1 ? '✅' : idx === 2 ? '🩺' : '🤝'}
+                                </span>
+                                <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{caracteristica}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Indicadores de scroll horizontal */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                {datosSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => irASlide(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-125 ${
+                      index === slideActual
+                        ? 'bg-orange-500 scale-125 shadow-lg'
+                        : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Ir al slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Versión desktop (mantiene el diseño original) */}
+            <div className="hidden lg:flex flex-row min-h-[500px]">
+              {/* Imagen (izquierda en desktop) */}
+              <div className="w-1/2 h-auto relative overflow-hidden">
                 <ImageSlider 
                   imagenes={slideActualData.imagenUrl} 
                   imagenAlt={slideActualData.imagenAlt}
                 />
               </div>
 
-              {/* Contenido (derecha en desktop, abajo en móvil) */}
-              <div className="w-full lg:w-1/2 p-4 sm:p-6 lg:p-8 xl:p-12 flex flex-col justify-center">
-                <div className="space-y-4 sm:space-y-6">
-                
-                  <div className="flex flex-row ">
+              {/* Contenido (derecha en desktop) */}
+              <div className="w-1/2 p-8 xl:p-12 flex flex-col justify-center">
+                <div className="space-y-6">
+                  <div className="flex flex-row">
                     {/* Número de slide */}
                     <div className="flex items-center space-x-2">
-                      <span className="text-xl sm:text-2xl font-bold text-orange-500">
+                      <span className="text-2xl font-bold text-orange-500">
                         {String(slideActual + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
+                      <span className="text-gray-400 text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
                     </div>
-
-                    {/* Indicadores de puntos para móvil - al lado del contador */}
-                    <div className="flex space-x-1.5 ml-3 lg:hidden">
-                      {datosSlides.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => irASlide(index)}
-                          className={`w-2 h-2 rounded-full transition-all duration-200 ${index === slideActual
-                            ? 'bg-orange-500 scale-125'
-                            : 'bg-gray-300 hover:bg-gray-400'
-                            }`}
-                          aria-label={`Ir al slide ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-
                   </div>
 
                   {/* Título */}
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
+                  <h3 className="text-3xl font-bold text-gray-800 leading-tight">
                     {slideActualData.titulo}
                   </h3>
 
                   {/* Descripción */}
-                  <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                  <p className="text-lg text-gray-600 leading-relaxed">
                     {slideActualData.descripcion}
                   </p>
 
                   {/* Características */}
-                  <ul className="space-y-2 sm:space-y-3">
+                  <ul className="space-y-3">
                     {slideActualData.caracteristicas.map((caracteristica, index) => (
-                      <li key={index} className="flex items-start space-x-2 sm:space-x-3">
-                        <span className="text-orange-500 text-base sm:text-lg mt-0.5 flex-shrink-0">
+                      <li key={index} className="flex items-start space-x-3">
+                        <span className="text-orange-500 text-lg mt-0.5 flex-shrink-0">
                           {index === 0 ? '✨' : index === 1 ? '✅' : index === 2 ? '🩺' : '🤝'}
                         </span>
-                        <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{caracteristica}</span>
+                        <span className="text-base text-gray-700 leading-relaxed">{caracteristica}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
             </div>
-
           </div>
 
-                    
-            {/* Indicadores de puntos - Solo en desktop, posicionados en la parte inferior */}
-            <div className="hidden bg-white w-auto p-3 rounded-xl sm:rounded-2xl  shadow-xl sm:shadow-2xl overflow-hidden lg:block absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {datosSlides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => irASlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === slideActual
-                      ? 'bg-orange-500 scale-125'
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  aria-label={`Ir al slide ${index + 1}`}
-                />
-              ))}
-            </div>
-
+          {/* Indicadores de puntos - Solo en desktop */}
+          <div className="hidden lg:block bg-white w-auto p-3 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {datosSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => irASlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  index === slideActual
+                    ? 'bg-orange-500 scale-125'
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Ir al slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

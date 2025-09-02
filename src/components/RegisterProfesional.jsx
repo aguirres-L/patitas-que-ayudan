@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { auth, addDataWithCustomId } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
+import DecoracionForm from './decoracionUi/DecoracionForm';
 
 // Este componente no recibe props
 
@@ -182,14 +183,7 @@ const RegisterProfesional = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center p-4 overflow-y-auto">
       {/* Fondo decorativo */}
-      <div className="absolute h-screen inset-0 overflow-hidden">
-        <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
-        <div className="md:hidden absolute top-2 right-2 w-16 h-16 bg-orange-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob"></div>
-        <div className="md:hidden absolute bottom-2 left-2 w-16 h-16 bg-yellow-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob animation-delay-2000"></div>
-      </div>
+      <DecoracionForm />
 
       <div className="relative w-full max-w-md lg:max-w-lg">
         {/* Logo y título */}
@@ -225,7 +219,7 @@ const RegisterProfesional = () => {
         )}
 
         {/* Formulario */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-1" onSubmit={handleSubmit}>
           {/* Tipo de Profesional - Botones personalizados */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">

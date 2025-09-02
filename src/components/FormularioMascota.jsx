@@ -70,6 +70,7 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
       alergias,
       enfermedades,
       notas,
+      estadoChapita: false,
       fechaCreacion: new Date().toISOString(), // Agregar fecha de creación
     };
     
