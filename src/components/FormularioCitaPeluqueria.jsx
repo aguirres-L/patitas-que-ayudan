@@ -76,6 +76,7 @@ export const FormularioCitaPeluqueria = ({
     try {
       // Obtener datos de la mascota seleccionada
       const mascotaSeleccionada = mascotas.find(m => m.id == formData.mascotaId);
+      console.log(mascotaSeleccionada,'mascotaSeleccionada');
       
       // Preparar datos de la cita
       const datosCita = {
@@ -84,6 +85,7 @@ export const FormularioCitaPeluqueria = ({
         mascotaRaza: mascotaSeleccionada?.raza || '',
         mascotaEdad: mascotaSeleccionada?.edad || '',
         fechaCompleta: `${formData.fecha} ${formData.hora}`,
+        fotoMascota: mascotaSeleccionada?.fotoUrl || '',
         tipoProfesional: 'peluquero',
         duracion: 60, // duración en minutos
         precio: 0, // se puede calcular después

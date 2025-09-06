@@ -16,7 +16,7 @@ const DashboardProfesional = () => {
   const [mascotasEncontradas, setMascotasEncontradas] = useState([]);
   const [isBuscandoMascotas, setIsBuscandoMascotas] = useState(false);
   const [terminoBusqueda, setTerminoBusqueda] = useState('');
-  const [pestañaActiva, setPestañaActiva] = useState('buscar');
+  const [pestañaActiva, setPestañaActiva] = useState('historial');
   const [mostrarCitas, setMostrarCitas] = useState(false);
   const [isActualizandoTienda, setIsActualizandoTienda] = useState(false);
   
@@ -25,6 +25,10 @@ const DashboardProfesional = () => {
   const [isSubiendoImagen, setIsSubiendoImagen] = useState(false);
   const [archivoImagen, setArchivoImagen] = useState(null);
   const [urlImagenLocal, setUrlImagenLocal] = useState('');
+  
+  // Estados para modal de detalles de mascota
+  const [mostrarModalMascota, setMostrarModalMascota] = useState(false);
+  const [datosMascotaSeleccionada, setDatosMascotaSeleccionada] = useState(null);
 
   // Cargar datos del profesional
   useEffect(() => {
@@ -58,21 +62,10 @@ const DashboardProfesional = () => {
     }
   };
 
-  // Función para buscar mascotas
-  const handleBuscarMascotas = async (e) => {
-    e.preventDefault();
-    if (!terminoBusqueda.trim()) return;
-
-    setIsBuscandoMascotas(true);
-    try {
-      const resultado = await buscarMascotasPorChip(terminoBusqueda);
-      setMascotasEncontradas(resultado || []);
-    } catch (error) {
-      console.error('Error al buscar mascotas:', error);
-      setMascotasEncontradas([]);
-    } finally {
-      setIsBuscandoMascotas(false);
-    }
+  const handleVerMascota = (datosCita) => {
+    console.log(datosCita, 'datosCita handleVerMascota');
+    setDatosMascotaSeleccionada(datosCita);
+    setMostrarModalMascota(true);
   };
 
   console.log(datosProfesional, 'datosProfesional');
@@ -138,6 +131,12 @@ const DashboardProfesional = () => {
     setUrlImagenLocal('');
   };
 
+  // Función para cerrar modal de mascota
+  const handleCerrarModalMascota = () => {
+    setMostrarModalMascota(false);
+    setDatosMascotaSeleccionada(null);
+  };
+
   // Renderizar contenido específico según tipo de profesional
   const renderContenidoEspecifico = () => {
     if (!datosProfesional) return null;
@@ -166,16 +165,7 @@ const DashboardProfesional = () => {
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
           <div className="border-b border-gray-200 mb-6">
             <div className="flex space-x-4 overflow-x-auto">
-              <button 
-                onClick={() => setPestañaActiva('buscar')}
-                className={`pb-2 font-medium transition-colors duration-200 whitespace-nowrap ${
-                  pestañaActiva === 'buscar' 
-                    ? 'border-b-2 border-orange-500 text-orange-600' 
-                    : 'text-gray-600 hover:text-gray-800 hover:border-b-2 hover:border-gray-300'
-                }`}
-              >
-                Buscar Mascotas
-              </button>
+            
               <button 
                 onClick={() => setPestañaActiva('historial')}
                 className={`pb-2 font-medium transition-colors duration-200 whitespace-nowrap ${
@@ -186,94 +176,17 @@ const DashboardProfesional = () => {
               >
                 Historial de Atenciones
               </button>
-              <button 
+             {/*  <button 
                 onClick={() => setMostrarCitas(true)}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm font-medium"
               >
                 Gestionar Citas
-              </button>
+              </button> */}
             </div>
           </div>
 
           {/* Contenido de Pestañas */}
-          {pestañaActiva === 'buscar' && (
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Buscar Mascotas por Chip</h3>
-              
-              {/* Formulario de búsqueda */}
-              <form onSubmit={handleBuscarMascotas} className="mb-6">
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      placeholder="Ingresa el número de chip de la mascota"
-                      value={terminoBusqueda}
-                      onChange={(e) => setTerminoBusqueda(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                      disabled={isBuscandoMascotas}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isBuscandoMascotas || !terminoBusqueda.trim()}
-                    className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isBuscandoMascotas ? 'Buscando...' : 'Buscar'}
-                  </button>
-                </div>
-              </form>
-
-              {/* Resultados de búsqueda */}
-              {isBuscandoMascotas && (
-                <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-                  <p className="mt-2 text-gray-600">Buscando mascotas...</p>
-                </div>
-              )}
-
-              {!isBuscandoMascotas && mascotasEncontradas.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900">Mascotas encontradas:</h4>
-                  {mascotasEncontradas.map((mascota, index) => (
-                    <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <img 
-                            src={mascota.fotoUrl || "/dog-avatar.png"} 
-                            alt={mascota.nombre} 
-                            className="w-12 h-12 rounded-full object-cover" 
-                          />
-                          <div>
-                            <h5 className="font-semibold text-gray-900">{mascota.nombre}</h5>
-                            <p className="text-sm text-gray-600">{mascota.raza} • {mascota.edad} años</p>
-                            <p className="text-xs text-gray-500">Dueño: {mascota.propietario?.nombre}</p>
-                          </div>
-                        </div>
-                        <Link 
-                          to={`/pet-profile/${mascota.id}`}
-                          className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 text-sm"
-                        >
-                          Ver Perfil
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {!isBuscandoMascotas && terminoBusqueda && mascotasEncontradas.length === 0 && (
-                <div className="text-center py-8">
-                  <div className="text-gray-400 mb-4">
-                    <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-600">No se encontraron mascotas con ese chip</p>
-                </div>
-              )}
-            </div>
-          )}
-
+{console.log(datosProfesional.citas, 'datosProfesional.citas')}
           {pestañaActiva === 'historial' && (
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-4">Historial de Citas</h3>
@@ -339,12 +252,12 @@ const DashboardProfesional = () => {
                         </div>
                         <div className="flex space-x-2">
                           {cita.mascotaId && (
-                            <Link 
-                              to={`/pet-profile/${cita.mascotaId}`}
+                            <button 
+                            onClick={ () => handleVerMascota(cita) }
                               className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600 transition-colors duration-200"
                             >
                               Ver Mascota
-                            </Link>
+                            </button>
                           )}
                           <button 
                             className="bg-orange-500 text-white px-3 py-1 rounded text-xs hover:bg-orange-600 transition-colors duration-200"
@@ -601,6 +514,185 @@ const DashboardProfesional = () => {
                       {datosProfesional?.fotoLocalUrl ? 'Actualizar' : 'Agregar'}
                     </>
                   )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de detalles de mascota */}
+      {mostrarModalMascota && datosMascotaSeleccionada && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  Detalles de la Mascota
+                </h3>
+                <button
+                  onClick={handleCerrarModalMascota}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Contenido del modal */}
+              <div className="space-y-6">
+                {/* Foto de la mascota */}
+                {datosMascotaSeleccionada.fotoMascota && (
+                  <div className="text-center">
+                    <img 
+                      src={datosMascotaSeleccionada.fotoMascota} 
+                      alt={datosMascotaSeleccionada.mascotaNombre}
+                      className="w-32 h-32 object-cover rounded-full mx-auto shadow-lg"
+                    />
+                  </div>
+                )}
+
+                {/* Información de la mascota */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg className="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    Información de la Mascota
+                  </h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Nombre</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.mascotaNombre}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Raza</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.mascotaRaza}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Edad</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.mascotaEdad} años</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">ID de Mascota</p>
+                      <p className="font-medium text-gray-900 text-xs font-mono">{datosMascotaSeleccionada.mascotaId}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Información del cliente */}
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg className="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Información del Cliente
+                  </h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Nombre</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.clienteNombre}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.clienteEmail}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Teléfono</p>
+                      <p className="font-medium text-gray-900">{datosMascotaSeleccionada.telefonoContacto}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">ID de Cliente</p>
+                      <p className="font-medium text-gray-900 text-xs font-mono">{datosMascotaSeleccionada.clienteId}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Información de la cita */}
+                <div className="bg-green-50 rounded-lg p-4">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Información de la Cita
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600">Fecha</p>
+                        <p className="font-medium text-gray-900">{datosMascotaSeleccionada.fecha}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Hora</p>
+                        <p className="font-medium text-gray-900">{datosMascotaSeleccionada.hora}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Duración</p>
+                        <p className="font-medium text-gray-900">{datosMascotaSeleccionada.duracion} minutos</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Precio</p>
+                        <p className="font-medium text-gray-900">${datosMascotaSeleccionada.precio}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Servicios */}
+                    {datosMascotaSeleccionada.servicios && datosMascotaSeleccionada.servicios.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-600">Servicios</p>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {datosMascotaSeleccionada.servicios.map((servicio, index) => (
+                            <span key={index} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                              {servicio}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Tipo de corte (para peluqueros) */}
+                    {datosMascotaSeleccionada.tipoCorte && (
+                      <div>
+                        <p className="text-sm text-gray-600">Tipo de Corte</p>
+                        <p className="font-medium text-gray-900">{datosMascotaSeleccionada.tipoCorte}</p>
+                      </div>
+                    )}
+
+                    {/* Observaciones */}
+                    {datosMascotaSeleccionada.observaciones && (
+                      <div>
+                        <p className="text-sm text-gray-600">Observaciones</p>
+                        <p className="font-medium text-gray-900 italic">{datosMascotaSeleccionada.observaciones}</p>
+                      </div>
+                    )}
+
+                    {/* Estado y badges */}
+                    <div className="flex flex-wrap gap-2">
+                      <span className={`inline-block px-3 py-1 text-sm rounded-full ${
+                        datosMascotaSeleccionada.estado === 'confirmada' ? 'bg-green-100 text-green-800' :
+                        datosMascotaSeleccionada.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                        datosMascotaSeleccionada.estado === 'cancelada' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {datosMascotaSeleccionada.estado}
+                      </span>
+                      {datosMascotaSeleccionada.esPrimeraVisita && (
+                        <span className="inline-block px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-800">
+                          Primera visita
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Botón de cerrar */}
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleCerrarModalMascota}
+                  className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200"
+                >
+                  Cerrar
                 </button>
               </div>
             </div>

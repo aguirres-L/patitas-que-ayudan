@@ -8,8 +8,8 @@ import { SvgSolDark } from '../ui/svg/SvgSolDark';
 import { SvgLunaDark } from '../ui/svg/SvgLunaDark';
 import Campana from '../ui/svg/Campana';
 import { NotificacionesChapitas } from '../NotificacionesChapitas';
-
-
+// Usar ruta absoluta desde public/
+const logo = '/logo1.png';
 
 export interface NavbarProps {
   tipo: 'home' | 'dashboard';
@@ -39,7 +39,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const { typeTheme, toggleTheme } = useTheme();
   
-  let logo = '../../../public/logo1.png';
 
   // Función por defecto para cerrar sesión si no se proporciona
   const handleCerrarSesion = async () => {
@@ -159,13 +158,8 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo y título */}
         <Link to="/about" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-          <div className={typeTheme === 'dark'
-            ? 'h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg'
-            : 'h-8 w-8 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg'}>
-            <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </div>
+        <img src={logo} className='h-14 w-14' alt="" />
+
           <h1 className={typeTheme === 'dark' ? 'text-xl sm:text-2xl font-bold text-white' : 'text-xl sm:text-2xl font-bold text-gray-900'}>{titulo}</h1>
         </Link>
 
