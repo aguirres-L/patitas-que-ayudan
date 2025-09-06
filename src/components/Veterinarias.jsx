@@ -26,6 +26,26 @@ export default function Veterinarias({clinicasVeterinarias, manejarAbrirFormular
           <div className="flex overflow-x-auto gap-4 md:gap-6 pb-4">
             {clinicasVeterinarias.map((clinica) => (
               <div key={clinica.id} className="bg-white p-4 md:p-6 rounded-lg shadow-sm min-w-[280px] sm:min-w-[320px] md:min-w-[300px] flex-shrink-0">
+                {/* Imagen del local */}
+                <div className="mb-4">
+                  {clinica.fotoLocalUrl ? (
+                    <img 
+                      src={clinica.fotoLocalUrl} 
+                      alt={`Local de ${clinica.nombre}`}
+                      className="w-full h-32 object-cover rounded-lg shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-full h-32 bg-blue-50 rounded-lg flex items-center justify-center">
+                      <div className="text-center">
+                        <svg className="w-12 h-12 text-blue-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <p className="text-xs text-blue-400">Sin foto del local</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
                 <div className="flex items-start justify-between mb-3">
                   <h4 className="font-bold text-base md:text-lg text-blue-600">{clinica.nombre}</h4>
                {/*    <span className="text-xs md:text-sm text-gray-500">{clinica.distancia}</span>

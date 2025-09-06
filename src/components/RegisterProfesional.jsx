@@ -7,6 +7,7 @@ import {
 import { auth, addDataWithCustomId } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import DecoracionForm from './decoracionUi/DecoracionForm';
+import { ImageUploaderProfesional } from './ImageUploaderProfesional';
 
 // Este componente no recibe props
 
@@ -67,6 +68,11 @@ const RegisterProfesional = () => {
   });
   const [isRegistrando, setIsRegistrando] = useState(false);
   const [error, setError] = useState('');
+  
+  // Estados para manejo de imagen
+  const [archivoImagen, setArchivoImagen] = useState(null);
+  const [urlImagenLocal, setUrlImagenLocal] = useState('');
+  const [isSubiendoImagen, setIsSubiendoImagen] = useState(false);
   let logo = '../../public/logo1.png';
 
   // Redirigir si ya está autenticado como profesional
@@ -109,6 +115,22 @@ const RegisterProfesional = () => {
         displayName: formData.nombre
       });
 
+      // Si hay una imagen seleccionada, subirla primero
+      let urlImagenFinal = urlImagenLocal;
+      if (archivoImagen && !urlImagenLocal) {
+        try {
+          setIsSubiendoImagen(true);
+          const { subirImagenProfesional } = await import('../data/firebase/firebase');
+          urlImagenFinal = await subirImagenProfesional(userCredential.user.uid, archivoImagen);
+          console.log('✅ Imagen del local subida exitosamente:', urlImagenFinal);
+        } catch (error) {
+          console.error('❌ Error al subir imagen del local:', error);
+          // Continuar sin imagen si hay error
+        } finally {
+          setIsSubiendoImagen(false);
+        }
+      }
+
       // Guardar datos del profesional en Firestore
       await addDataWithCustomId('profesionales', userCredential.user.uid, {
         nombre: formData.nombre,
@@ -125,6 +147,7 @@ const RegisterProfesional = () => {
         horario: formData.horario,
         experiencia: formData.experiencia,
         licencia: formData.licencia,
+        fotoLocalUrl: urlImagenFinal, // Agregar URL de la imagen del local
         rol: 'profesional',
         fechaRegistro: new Date(),
         estado: 'activo'
@@ -558,6 +581,22 @@ const RegisterProfesional = () => {
             />
           </div>
           )}
+
+          {/* Foto del local */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Foto del local (opcional)
+            </label>
+            <ImageUploaderProfesional
+              onImageSelect={setArchivoImagen}
+              onImageUploaded={setUrlImagenLocal}
+              isCargando={isRegistrando || isSubiendoImagen}
+              profesionalId={formData.email} // Usar email como ID temporal hasta que se cree el usuario
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Sube una foto de tu local para generar confianza en los usuarios
+            </p>
+          </div>
           {/* Contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">

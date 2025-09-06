@@ -72,7 +72,8 @@ const Dashboard = () => {
     especialidades: profesional.especialidad ? [profesional.especialidad] : [],
     horario: profesional.horario || 'Horario no disponible',
     calificacion: 4.5, // Valor por defecto, se puede implementar sistema de calificaciones después
-    distancia: 'Distancia no disponible' // Se puede implementar geolocalización después
+    distancia: 'Distancia no disponible', // Se puede implementar geolocalización después
+    fotoLocalUrl: profesional.fotoLocalUrl || null // Agregar URL de la imagen del local
   });
 
   const mapearProfesionalAPeluqueria = (profesional) => ({
@@ -83,15 +84,16 @@ const Dashboard = () => {
     servicios: profesional.especialidad ? [profesional.especialidad] : [],
     horario: profesional.horario || 'Horario no disponible',
     calificacion: 4.5, // Valor por defecto
-    distancia: 'Distancia no disponible'
+    distancia: 'Distancia no disponible',
+    fotoLocalUrl: profesional.fotoLocalUrl || null // Agregar URL de la imagen del local
   });
 
   const mapearProfesionalATienda = (profesional) => ({
-
     id: profesional.id,
     nombre: profesional.nombre,
     direccion: profesional.direccion,
     telefono: profesional.telefono,
+    fotoLocalUrl: profesional.fotoLocalUrl || null // Agregar URL de la imagen del local
   });
 
 

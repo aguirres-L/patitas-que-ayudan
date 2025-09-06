@@ -922,6 +922,25 @@ export const subirImagenMascota = async (userId, petId, archivo) => {
 };
 
 /**
+ * Sube una imagen de profesional a Firebase Storage
+ * @param {string} profesionalId - ID del profesional
+ * @param {File} archivo - Archivo de imagen
+ * @returns {Promise<string>} - URL de la imagen subida
+ */
+export const subirImagenProfesional = async (profesionalId, archivo) => {
+  try {
+    const ruta = `profesionales/${profesionalId}/images`;
+    const nombreArchivo = `local_${profesionalId}`;
+    
+    const imageUrl = await subirArchivo(archivo, ruta, nombreArchivo);
+    return imageUrl;
+  } catch (error) {
+    console.error('Error al subir imagen de profesional:', error);
+    throw error;
+  }
+};
+
+/**
  * Elimina un archivo de Firebase Storage
  * @param {string} urlArchivo - URL completa del archivo
  * @returns {Promise<void>}

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Navbar } from './Navbar';
-import { obtenerProfesionalPorUid, buscarMascotasPorChip } from '../data/firebase/firebase';
+import { obtenerProfesionalPorUid, buscarMascotasPorChip, subirImagenProfesional, updateDataCollection } from '../data/firebase/firebase';
 import { SistemaCitas } from './SistemaCitas';
 import GestionTienda from './GestionTienda';
+import { ImageUploaderProfesional } from './ImageUploaderProfesional';
 
 // Este componente no recibe props
 const DashboardProfesional = () => {
@@ -18,6 +19,12 @@ const DashboardProfesional = () => {
   const [pestañaActiva, setPestañaActiva] = useState('buscar');
   const [mostrarCitas, setMostrarCitas] = useState(false);
   const [isActualizandoTienda, setIsActualizandoTienda] = useState(false);
+  
+  // Estados para edición de imagen
+  const [mostrarModalEditarImagen, setMostrarModalEditarImagen] = useState(false);
+  const [isSubiendoImagen, setIsSubiendoImagen] = useState(false);
+  const [archivoImagen, setArchivoImagen] = useState(null);
+  const [urlImagenLocal, setUrlImagenLocal] = useState('');
 
   // Cargar datos del profesional
   useEffect(() => {
@@ -84,6 +91,51 @@ const DashboardProfesional = () => {
     } finally {
       setIsActualizandoTienda(false);
     }
+  };
+
+  // Función para manejar la actualización de imagen
+  const handleActualizarImagen = async () => {
+    if (!archivoImagen) {
+      alert('Por favor selecciona una imagen');
+      return;
+    }
+
+    setIsSubiendoImagen(true);
+    try {
+      console.log('🔄 Subiendo nueva imagen del local...');
+      const nuevaUrlImagen = await subirImagenProfesional(usuario.uid, archivoImagen);
+      console.log('✅ Nueva imagen subida:', nuevaUrlImagen);
+
+      // Actualizar en Firestore
+      await updateDataCollection('profesionales', usuario.uid, {
+        fotoLocalUrl: nuevaUrlImagen
+      });
+
+      // Actualizar estado local
+      setDatosProfesional(prev => ({
+        ...prev,
+        fotoLocalUrl: nuevaUrlImagen
+      }));
+
+      // Cerrar modal y limpiar estados
+      setMostrarModalEditarImagen(false);
+      setArchivoImagen(null);
+      setUrlImagenLocal('');
+      
+      alert('¡Imagen del local actualizada exitosamente!');
+    } catch (error) {
+      console.error('❌ Error al actualizar imagen:', error);
+      alert('Error al actualizar la imagen: ' + error.message);
+    } finally {
+      setIsSubiendoImagen(false);
+    }
+  };
+
+  // Función para cancelar edición de imagen
+  const handleCancelarEdicionImagen = () => {
+    setMostrarModalEditarImagen(false);
+    setArchivoImagen(null);
+    setUrlImagenLocal('');
   };
 
   // Renderizar contenido específico según tipo de profesional
@@ -363,6 +415,50 @@ const DashboardProfesional = () => {
             <h3 className="text-xl font-bold text-gray-900 mb-4">
               {datosProfesional.tipoProfesional === 'tienda' ? 'Mi Información de Tienda' : 'Mi Información Profesional'}
             </h3>
+            
+            {/* Imagen del local */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-medium text-gray-600">
+                  {datosProfesional.fotoLocalUrl ? 'Foto del local' : 'Agregar foto del local'}
+                </h4>
+                <button
+                  onClick={() => setMostrarModalEditarImagen(true)}
+                  className="text-xs bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition-colors duration-200 flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  {datosProfesional.fotoLocalUrl ? 'Editar' : 'Agregar'}
+                </button>
+              </div>
+              
+              {datosProfesional.fotoLocalUrl ? (
+                <div className="relative">
+                  <img 
+                    src={datosProfesional.fotoLocalUrl} 
+                    alt={`Local de ${datosProfesional.nombre}`}
+                    className="w-full max-w-md h-48 object-cover rounded-lg shadow-sm"
+                  />
+                  <div className="absolute top-2 right-2 bg-white bg-opacity-90 rounded-full p-1">
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full max-w-md h-48 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                  <div className="text-center">
+                    <svg className="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <p className="text-sm text-gray-500">Sin foto del local</p>
+                    <p className="text-xs text-gray-400">Haz clic en "Agregar" para subir una imagen</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-gray-600">Nombre</p>
@@ -446,6 +542,68 @@ const DashboardProfesional = () => {
             <SistemaCitas 
               onCerrar={() => setMostrarCitas(false)}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Modal para editar imagen del local */}
+      {mostrarModalEditarImagen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-gray-900">
+                  {datosProfesional?.fotoLocalUrl ? 'Editar foto del local' : 'Agregar foto del local'}
+                </h3>
+                <button
+                  onClick={handleCancelarEdicionImagen}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Componente de carga de imagen */}
+              <div className="mb-6">
+                <ImageUploaderProfesional
+                  onImageSelect={setArchivoImagen}
+                  onImageUploaded={setUrlImagenLocal}
+                  isCargando={isSubiendoImagen}
+                  profesionalId={usuario?.uid}
+                  imagenActual={datosProfesional?.fotoLocalUrl}
+                />
+              </div>
+
+              {/* Botones de acción */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCancelarEdicionImagen}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleActualizarImagen}
+                  disabled={!archivoImagen || isSubiendoImagen}
+                  className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubiendoImagen ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Subiendo...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {datosProfesional?.fotoLocalUrl ? 'Actualizar' : 'Agregar'}
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
