@@ -19,6 +19,8 @@ import About from './components/Home/About';
 import ProtectedRouteAdmin from './components/ProtectedRouteAdmin';
 import ProtectedRouteMember from './components/ProtectedRouteMember';
 import AccesoBloqueado from './components/AccesoBloqueado';
+import ProtectedRouteSuperAdmin from './components/ProtectedRouteSuperAdmin';
+import DashboardSuperAdmin from './components/DashboardSuperAdmin';
 
 function App() {
   return (
@@ -57,6 +59,14 @@ function App() {
                   <DashboardAdmin />
                 </ProtectedRouteAdmin>
               } />
+
+              <Route path="/dashboard-super-admin" element={
+                <ProtectedRouteSuperAdmin>
+                  <DashboardSuperAdmin />
+                </ProtectedRouteSuperAdmin>
+              } />
+
+
               <Route path="/dashboardProfesional" element={
                 <ProtectedRouteProfesional>
                   <DashboardProfesional />

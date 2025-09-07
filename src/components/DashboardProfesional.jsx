@@ -6,6 +6,7 @@ import { obtenerProfesionalPorUid, buscarMascotasPorChip, subirImagenProfesional
 import { SistemaCitas } from './SistemaCitas';
 import GestionTienda from './GestionTienda';
 import { ImageUploaderProfesional } from './ImageUploaderProfesional';
+import DecoracionForm from './decoracionUi/DecoracionForm';
 
 // Este componente no recibe props
 const DashboardProfesional = () => {
@@ -189,7 +190,7 @@ const DashboardProfesional = () => {
 {console.log(datosProfesional.citas, 'datosProfesional.citas')}
           {pestañaActiva === 'historial' && (
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Historial de Citas</h3>
+           {/*    <h3 className="text-lg font-bold text-gray-900 mb-4">Historial de Citas</h3> */}
               
               {datosProfesional?.citas && datosProfesional.citas.length > 0 ? (
                 <div className="space-y-4">
@@ -294,14 +295,8 @@ const DashboardProfesional = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
       {/* Fondo decorativo */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
-        <div className="md:hidden absolute top-2 right-2 w-16 h-16 bg-orange-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob"></div>
-        <div className="md:hidden absolute bottom-2 left-2 w-16 h-16 bg-yellow-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob animation-delay-2000"></div>
-      </div>
+      <DecoracionForm />
+
 
       {/* Navbar modular */}
       <Navbar 
@@ -437,10 +432,10 @@ const DashboardProfesional = () => {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-blue-800">
-                  Información para Profesionales
+                 Proximamente
                 </h3>
                 <p className="text-sm text-blue-700 mt-1">
-                  Puedes buscar mascotas por su número de chip y acceder a sus perfiles para actualizar información médica, vacunas, tratamientos y otros datos relevantes.
+                  Podras buscar mascotas por su número de chip y acceder a sus perfiles para actualizar información médica, vacunas, tratamientos y otros datos relevantes.
                 </p>
               </div>
             </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Dashboard from './Dashboard';
-import DashboardAdmin from './DashboardAdmin';
+import DashboardSuperAdmin from './DashboardSuperAdmin';
+ 
 
 // Este componente no recibe props
 const DashboardSelector = () => {
@@ -26,6 +27,8 @@ const DashboardSelector = () => {
   switch (rol) {
     case 'admin':
       return <DashboardAdmin />;
+    case 'superAdmin':
+      return <DashboardSuperAdmin />;
     case 'usuario':
     default:
       return <Dashboard />;

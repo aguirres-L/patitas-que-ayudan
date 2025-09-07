@@ -81,6 +81,7 @@ const Register = () => {
         },
         rol: 'usuario', // Rol por defecto
         isMember: true,
+        tipoMensualidad:false,
         fechaRegistro: new Date()
       });
 

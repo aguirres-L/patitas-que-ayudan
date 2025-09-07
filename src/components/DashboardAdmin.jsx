@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Navbar } from './Navbar';
 import { obtenerUsuarioPorUid } from '../data/firebase/firebase';
 import { useTheme } from '../contexts/ThemeContext';
+import DecoracionForm from './decoracionUi/DecoracionForm';
 
 // Este componente no recibe props
 const DashboardAdmin = () => {
@@ -192,14 +193,8 @@ const DashboardAdmin = () => {
         : "min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-16"
     }>
       {/* Fondo decorativo */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
-        <div className="md:hidden absolute top-2 right-2 w-16 h-16 bg-purple-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob"></div>
-        <div className="md:hidden absolute bottom-2 left-2 w-16 h-16 bg-blue-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob animation-delay-2000"></div>
-      </div>
+      <DecoracionForm />
+
 
       {/* Navbar modular */}
       <Navbar 

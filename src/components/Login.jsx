@@ -17,6 +17,15 @@ const Login = () => {
   const [error, setError] = useState('');
   let logo = '../../public/logo1.png';
 
+
+
+  /* 
+  
+  terminar con la logica para el dashboard de super admin y ver si funciona correctamente
+
+  */
+
+
   // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAutenticado) {

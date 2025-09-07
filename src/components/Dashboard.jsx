@@ -12,6 +12,7 @@ import { agregarMascotaAUsuario, obtenerUsuarioPorUid,
 import { FormularioMascota } from './FormularioMascota';
 import Tiendas from './Tiendas';
 import { useTheme } from '../contexts/ThemeContext';
+import DecoracionForm from './decoracionUi/DecoracionForm';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -292,16 +293,8 @@ const handleCancelarCita = async (cita) => {
         : "min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-16"
     }>
       {/* Fondo decorativo - Responsivo */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Elementos decorativos solo en pantallas medianas y grandes */}
-        <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
-        {/* Elementos decorativos para móviles - más pequeños */}
-        <div className="md:hidden absolute top-2 right-2 w-16 h-16 bg-orange-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob"></div>
-        <div className="md:hidden absolute bottom-2 left-2 w-16 h-16 bg-yellow-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob animation-delay-2000"></div>
-      </div>
+      <DecoracionForm />
+
 
       {/* Navbar modular */}
       <Navbar 
