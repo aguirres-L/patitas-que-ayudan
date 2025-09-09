@@ -86,7 +86,7 @@ const LoginProfesional = () => {
       [name]: value
     });
   };
-  let logo = '../../public/logo1.png';
+  let logo = '../../public/new-logo11.png';
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center p-4">
       {/* Fondo decorativo */}

@@ -2,7 +2,7 @@ import React from 'react';
 
 // Este componente no recibe props
 const About = () => {
-  let logo = '../../public/logo1.png';
+  let logo = '../../public/new-logo11.png';
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">

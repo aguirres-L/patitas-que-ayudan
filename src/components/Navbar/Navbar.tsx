@@ -9,7 +9,7 @@ import { SvgLunaDark } from '../ui/svg/SvgLunaDark';
 import Campana from '../ui/svg/Campana';
 import { NotificacionesChapitas } from '../NotificacionesChapitas';
 // Usar ruta absoluta desde public/
-const logo = '/logo1.png';
+const logo = '/new-logo11.png';
 
 export interface NavbarProps {
   tipo: 'home' | 'dashboard';
@@ -158,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo y título */}
         <Link to="/about" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
-        <img src={logo} className='h-14 w-14' alt="" />
+        <img src={logo} className='h-14 ' alt="" />
 
           <h1 className={typeTheme === 'dark' ? 'text-xl sm:text-2xl font-bold text-white' : 'text-xl sm:text-2xl font-bold text-gray-900'}>{titulo}</h1>
         </Link>

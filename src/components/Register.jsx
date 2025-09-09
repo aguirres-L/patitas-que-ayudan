@@ -25,7 +25,7 @@ const Register = () => {
   const [isCargando, setIsCargando] = useState(false);
   const [error, setError] = useState('');
 
-  let logo = '../../public/logo1.png';
+  let logo = '../../public/new-logo11.png';
 
 
   // Redirigir si ya está autenticado
@@ -136,8 +136,8 @@ const Register = () => {
       <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg h-full flex flex-col justify-center">
         {/* Logo y título - Compacto */}
         <div className="text-center mb-4 sm:mb-6">
-          <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg mb-2 sm:mb-3">
-                              <img src={logo} alt="" />
+             <div onClick={() => navigate('/')} className="mx-auto cursor-pointer  h-16 w-16 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg mb-4">
+                      <img src={logo} alt="" />
           </div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
             Huellitas Seguras
