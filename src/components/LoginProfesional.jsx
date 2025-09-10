@@ -5,6 +5,7 @@ import { auth, getDataById } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import typeProfesionalStore from '../service/zustand';
 import DecoracionForm from './decoracionUi/DecoracionForm';
+import logo11 from '../assets/new-logo11.png';
 
 // Este componente no recibe props
 const LoginProfesional = () => {
@@ -86,7 +87,7 @@ const LoginProfesional = () => {
       [name]: value
     });
   };
-  let logo = '../../public/new-logo11.png';
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 flex items-center justify-center p-4">
       {/* Fondo decorativo */}
@@ -97,7 +98,7 @@ const LoginProfesional = () => {
         {/* Logo y título */}
         <div className="text-center mb-6">
           <div onClick={() => navigate('/')} className="mx-auto cursor-pointer  h-16 w-16 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg mb-4">
-                      <img src={logo} alt="" />
+                      <img src={logo11} alt="" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Huellitas Seguras

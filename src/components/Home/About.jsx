@@ -1,16 +1,18 @@
 import React from 'react';
+import logo11 from '../../assets/new-logo11.png';
+import { useNavigate } from 'react-router-dom';
 
 // Este componente no recibe props
 const About = () => {
-  let logo = '../../public/new-logo11.png';
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header con branding consistente */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-4">
-            <div className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
-            <img src={logo} alt="" />
+          <div className="flex cursor-pointer items-center justify-center space-x-2 sm:space-x-3 mb-4">
+            <div onClick={() => navigate('/')} className="h-8 w-8  sm:h-10 sm:w-10 lg:h-12 lg:w-12 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+            <img src={logo11}  alt=" Huellitas Segurass" />
             </div>
             <h1 className="text-2xl  font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               Huellitas Seguras

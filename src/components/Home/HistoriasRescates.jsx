@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 const historiasRescate = [
   {
     id: 1,
-    imagen: '/src/assets/perros_1.png',
+    imagen: 'https://media.a24.com/p/5ea1366ab57e090f86abf5037da6b60e/adjuntos/296/imagenes/009/462/0009462750/533x300/smart/batata-perrita-rescatadajpg.jpg',
     titulo: 'Luna encontró su hogar después de 2 años en la calle',
     descripcion: 'Esta hermosa perrita fue rescatada en condiciones críticas de desnutrición y abandono. Su transformación es un testimonio del poder del amor y la dedicación.',
     nombreMascota: 'Luna',
@@ -17,7 +17,7 @@ const historiasRescate = [
   },
   {
     id: 2,
-    imagen: '/src/assets/perros_2.png',
+    imagen: 'https://estaticos.elcolombiano.com/binrepository/580x435/0c0/580d365/none/11101/BXVN/whatsapp-image-2021-05-07-at-6-11-50-pm_37681142_20210507183811.jpg',
     titulo: 'Max: De la desesperación a la felicidad',
     descripcion: 'Un perro abandonado en un parque industrial encontró una segunda oportunidad gracias al trabajo incansable de nuestro equipo de rescate.',
     nombreMascota: 'Max',
@@ -30,7 +30,7 @@ const historiasRescate = [
   },
   {
     id: 3,
-    imagen: '/src/assets/perros_3.png',
+    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRCt6ca2YOOyWETvQNkHid8qOO0CLcQMSgwRkIbZdH7dWasJ1NDafKyHAJhh5XFi5HSO0',
     titulo: 'Bella: Una transformación milagrosa',
     descripcion: 'Esta gatita demostró que el amor todo lo puede, superando problemas respiratorios graves para convertirse en una mascota saludable.',
     nombreMascota: 'Bella',
@@ -43,7 +43,7 @@ const historiasRescate = [
   },
   {
     id: 4,
-    imagen: '/src/assets/perros_4.png',
+    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLouz96v0Y9K9pbDjAg7jpusVn8aLa58YMOXsixcLv5M4gUVwNb9w5A5Ttxbj2P6RAou8',
     titulo: 'Rocky: El guerrero que nunca se rindió',
     descripcion: 'Con solo 3 patas, Rocky demostró que las limitaciones físicas no son obstáculo para la felicidad y el amor.',
     nombreMascota: 'Rocky',
@@ -56,7 +56,7 @@ const historiasRescate = [
   },
   {
     id: 5,
-    imagen: '/src/assets/perros_.png',
+    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDZNEXEh1jSi3WbN00yZm2pG9iIXRN-IAMmit_R2kT382jQMSMJPTUF2wBtI34uPS5ooI',
     titulo: 'Mia: La princesa que conquistó corazones',
     descripcion: 'Esta pequeña gatita sorda demostró que las discapacidades no son limitaciones para encontrar amor y felicidad.',
     nombreMascota: 'Mia',
@@ -69,7 +69,7 @@ const historiasRescate = [
   },
   {
     id: 6,
-    imagen: '/src/assets/perros_1.png',
+    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSV_QoaS0Qf0DEr3k9Qt3BlJ0-P8ii9dkIEx3C4Xxsjcv7bAx4AesGrCavpd0FtjwrCqUE',
     titulo: 'Thor: El gigante gentil que encontró su lugar',
     descripcion: 'Este perro grande intimidaba por su tamaño, pero su corazón era más grande que sus miedos.',
     nombreMascota: 'Thor',
@@ -106,6 +106,7 @@ export default function HistoriasRescates() {
     let mensaje = '¡Hola! Estoy interesado en adoptar una mascota de Patitas que Ayudan. ';
     
     // Si hay una mascota específica, personalizar el mensaje
+    console.log(mascota,'mascota');
     if (mascota) {
       mensaje += `Me llamó especialmente la atención la historia de ${mascota.nombreMascota} (${mascota.raza}, ${mascota.edad}). `;
       mensaje += `¿Podrían darme más información sobre el proceso de adopción?`;
@@ -150,7 +151,7 @@ export default function HistoriasRescates() {
                 <img
                   src={noticia.imagen}
                   alt={noticia.titulo}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-4 right-4">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
@@ -233,7 +234,7 @@ export default function HistoriasRescates() {
                   <img
                     src={noticiaSeleccionada.imagen}
                     alt={noticiaSeleccionada.titulo}
-                    className="w-full h-80 object-cover rounded-lg"
+                    className="w-full h-80 object-contain rounded-lg"
                   />
                   <div className="absolute top-4 right-4">
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -279,7 +280,7 @@ export default function HistoriasRescates() {
              
             { noticiaSeleccionada.estado === false ? (
               <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-                <button onClick={infoAdoptar} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
+                <button onClick={() => infoAdoptar(noticiaSeleccionada)} className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200">
                   ¡Quiero adoptar una mascota como esta!
                 </button>
               </div>

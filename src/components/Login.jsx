@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../data/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import DecoracionForm from './decoracionUi/DecoracionForm';
+import logo11 from '../assets/new-logo11.png';
 
 // Este componente no recibe props
 const Login = () => {
@@ -15,8 +16,7 @@ const Login = () => {
   });
   const [isCargando, setIsCargando] = useState(false);
   const [error, setError] = useState('');
-  let logo = '../../public/new-logo11.png';
-
+  
 
 
   /* 
@@ -91,7 +91,7 @@ const Login = () => {
         {/* Logo y título - Compacto */}
         <div className="text-center mb-4 sm:mb-6">
           <a href='/' className="mx-auto h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg mb-2 sm:mb-3">
-           <img src={logo} alt="" />
+           <img src={logo11} alt="" />
           </a>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
             Huellitas Seguras
