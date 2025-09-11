@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ModalAlert from '../ui/svg/uiPetProfile/uiMetodoDePago/ModalAlert';
+import UiPasosTranferencia from './UiPasosTranferencia';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Configuración del CBU (esto lo puedes mover a un archivo de config)
 const CONFIG_PAGOS = {
@@ -9,9 +12,11 @@ const CONFIG_PAGOS = {
   BANCO: 'Banco de la Nación Argentina'
 };
 
-export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) {
+export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) {
+  const { usuario } = useAuth();
+
   const navigate = useNavigate();
-  const [metodoSeleccionado, setMetodoSeleccionado] = useState('tarjeta');
+  const [metodoSeleccionado, setMetodoSeleccionado] = useState('transferencia');
   const [datosTarjeta, setDatosTarjeta] = useState({
     numero: '',
     nombre: '',
@@ -19,12 +24,39 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
     cvv: ''
   });
   const [isProcesando, setIsProcesando] = useState(false);
-  const [errores, setErrores] = useState({});
+  const [isModalAlert, setIsModalAlert] = useState(false);
+  const [tipoAlert, setTipoAlert] = useState('');
+  const [mensaje, setMensaje] = useState({});
 
+
+  const [isPasosTranferencia, setIsPasosTranferencia] = useState(false);
+  const [isTransferenciaConfirmada, setIsTransferenciaConfirmada] = useState(false);
   // ... existing validation and formatting functions ...
 
-  const procesarPago = async () => {
-    if (metodoSeleccionado === 'tarjeta' && !validarTarjeta()) {
+  const procesarPago = async (pago) => {
+  // para cuando se use pago con tajeta , usar mercado pago   console.log(pago,'pago');
+    if (metodoSeleccionado === 'tarjeta') {
+      setIsModalAlert(true);
+      setTipoAlert('nextUpdate');
+     /*  setMensaje({
+        tipo: 'Error',  Para cuando use pago con tarjeta
+        mensaje: 'Por favor, completa todos los campos de la tarjeta correctamente.'
+      }); */
+      return; 
+    }
+
+    // Para transferencia, verificar que esté confirmada
+    if (metodoSeleccionado === 'transferencia' && !isTransferenciaConfirmada) {
+      setIsModalAlert(true);
+      setTipoAlert('error');
+      setMensaje({
+        tipo: 'Error',
+        mensaje: 'Por favor, confirma que realizaste la transferencia antes de continuar.'
+      });
+
+
+      
+
       return;
     }
 
@@ -36,13 +68,17 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Simular éxito
-      alert(`¡Pago procesado exitosamente para la chapita de ${mascotaNombre}!`);
       onCerrar(); // Cerrar el modal
       
     } catch (error) {
-      alert('Error al procesar el pago. Intenta nuevamente.');
+      setIsModalAlert(true);
+      setTipoAlert('error');
+      setMensaje({
+        tipo: 'Error',
+        mensaje: 'Error al procesar el pago. Intenta nuevamente.'
+      });
     } finally {
-      setIsProcesando(false);
+    //  setIsProcesando(false);
     }
   };
 
@@ -59,7 +95,7 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
           <div>
             <h4 className="font-semibold text-gray-800">Chapita Personalizada</h4>
             <p className="text-sm text-gray-600">Para: {mascotaNombre}</p>
-            <p className="text-lg font-bold text-orange-600">${monto.toLocaleString()}</p>
+            <p className="text-lg font-bold text-orange-600">$7.000</p>
           </div>
         </div>
       </div>
@@ -90,6 +126,7 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
             </div>
           </button>
 
+            {/* Transferencias Bancarias */}
           <button
             onClick={() => setMetodoSeleccionado('transferencia')}
             className={`p-4 border-2 rounded-lg transition-all ${
@@ -108,24 +145,32 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
               </div>
             </div>
           </button>
+
         </div>
+
+        {metodoSeleccionado === 'transferencia' && (
+        <UiPasosTranferencia 
+          aliasCuenta={CONFIG_PAGOS.ALIAS_CUENTA}
+          cbuCuenta={CONFIG_PAGOS.CBU_CUENTA}
+          titularCuenta={CONFIG_PAGOS.TITULAR_CUENTA}
+          banco={CONFIG_PAGOS.BANCO}
+          onConfirmarTransferencia={() => setIsTransferenciaConfirmada(true)}
+          isTransferenciaConfirmada={isTransferenciaConfirmada}
+        />
+      )}
+
       </div>
 
       {/* ... existing form sections ... */}
 
       {/* Botón de pago */}
-      <div className="flex space-x-4">
-        <button
-          onClick={onCerrar}
-          className="flex-1 py-3 px-6 rounded-lg font-medium border-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all"
-        >
-          Cancelar
-        </button>
+      <div className="flex">
+ 
         <button
           onClick={procesarPago}
-          disabled={isProcesando}
-          className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-            isProcesando
+          disabled={isProcesando || (metodoSeleccionado === 'transferencia' && !isTransferenciaConfirmada)}
+          className={`flex-1 py-3  px-6 rounded-lg font-medium transition-all ${
+            isProcesando || (metodoSeleccionado === 'transferencia' && !isTransferenciaConfirmada)
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
@@ -136,10 +181,16 @@ export default function MetodoDePago({ mascotaNombre, monto = 5000, onCerrar }) 
               <span>Procesando...</span>
             </div>
           ) : (
-            `Procesar Pago - $${monto.toLocaleString()}`
+            ` ${metodoSeleccionado === 'transferencia' ? 'Continuar' : 'En Construcción'} `
           )}
         </button>
       </div>
+
+      {isModalAlert && (
+        <ModalAlert typeAlert={tipoAlert} mensaje={mensaje} onCerrar={() => setIsModalAlert(false)} />
+      )}
+
+     
 
       {/* Información de seguridad */}
       <div className="text-center">

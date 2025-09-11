@@ -366,7 +366,7 @@ const PetProfile = () => {
                   Quiero una chapita para  {mascota.nombre}
                 </button>
                 <p className="text-sm text-gray-500 mt-3 text-center">
-                  {mascota.estadoChapita === true ? 'La chapita para ' + mascota.nombre + '  esta en produccion' : 'La chapita para ' + mascota.nombre + '  ya esta disponible'}</p>
+                  {mascota.estadoChapita === true ? 'La chapita para ' + mascota.nombre + '  esta en produccion' : ' Contactanos para obtener la chapita para ' + mascota.nombre}</p>
               </div>
             </div>
           )}
