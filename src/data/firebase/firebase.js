@@ -58,6 +58,8 @@ export const addDataCollection = async (nombreColeccion, datos) => {
     console.log(`Documento añadido a ${nombreColeccion} con ID: ${docRef.id}`);
     return docRef.id;
   } catch (error) {
+    console.log(error,'error');
+    
     console.error("Error al añadir datos:", error);
     throw error;
   }

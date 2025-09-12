@@ -7,6 +7,7 @@ import { SistemaCitas } from './SistemaCitas';
 import { EditarMascota } from './EditarMascota';
 import typeProfesionalStore from '../service/zustand';
 import MetodoDePago from './metodoDePago/MetodoDePago';
+import DecoracionForm from './decoracionUi/DecoracionForm';
 
 // Este componente recibe props a través de useParams
 const PetProfile = () => {
@@ -155,18 +156,9 @@ const PetProfile = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
+    <div className="h-full bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
       {/* Fondo decorativo - Responsivo */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Elementos decorativos solo en pantallas medianas y grandes */}
-        <div className="hidden md:block absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="hidden md:block absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="hidden lg:block absolute top-20 left-20 w-40 h-40 lg:w-60 lg:h-60 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
-        {/* Elementos decorativos para móviles - más pequeños */}
-        <div className="md:hidden absolute top-2 right-2 w-16 h-16 bg-orange-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob"></div>
-        <div className="md:hidden absolute bottom-2 left-2 w-16 h-16 bg-yellow-200 rounded-full mix-blend-multiply filter blur-lg opacity-50 animate-blob animation-delay-2000"></div>
-      </div>
+      <DecoracionForm/> 
 
       {/* Navbar modular */}
       <Navbar tipo="dashboard" />
@@ -198,7 +190,7 @@ const PetProfile = () => {
       {/* Main Content */}
       <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Header del Perfil */}
-        <div className="mb-6">
+        <div className="mt-2">
           <Link 
             to="/dashboard" 
             className="inline-flex items-center text-orange-600 hover:text-orange-700 transition-colors duration-200 mb-4"
@@ -213,7 +205,7 @@ const PetProfile = () => {
         {/* Contenido Principal */}
         <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
           {/* Encabezado */}
-          <div className="flex flex-col md:flex-row items-start md:items-center mb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center ">
             <div className="relative">
               <img 
                 src={mascota.fotoUrl || "/dog-avatar.png"} 

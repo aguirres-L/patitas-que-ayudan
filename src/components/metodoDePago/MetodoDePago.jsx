@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ModalAlert from '../ui/svg/uiPetProfile/uiMetodoDePago/ModalAlert';
 import UiPasosTranferencia from './UiPasosTranferencia';
 import { useAuth } from '../../contexts/AuthContext';
+import { addDataCollection } from '../../data/firebase';
 
 // Configuración del CBU (esto lo puedes mover a un archivo de config)
 const CONFIG_PAGOS = {
@@ -32,6 +33,7 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
   const [isPasosTranferencia, setIsPasosTranferencia] = useState(false);
   const [isTransferenciaConfirmada, setIsTransferenciaConfirmada] = useState(false);
   // ... existing validation and formatting functions ...
+
 
   const procesarPago = async (pago) => {
   // para cuando se use pago con tajeta , usar mercado pago   console.log(pago,'pago');
@@ -66,11 +68,48 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
       // Aquí iría la lógica real de Mercado Pago
       // Por ahora simulamos el proceso
       await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Datos completos del pago
+    const datosDelPago = {
+      usuarioId: usuario.uid,
+      usuarioEmail: usuario.email,
+      usuarioNombre: usuario.displayName || 'Usuario',
+      mascotaNombre: mascotaNombre,
+      monto: monto,
+      metodoPago: metodoSeleccionado,
+      estado: 'pendiente', // pendiente, confirmado, rechazado
+      fechaPago: new Date(),
+      // Para transferencias, podrías agregar:
+      ...(metodoSeleccionado === 'transferencia' && {
+        cbuDestino: CONFIG_PAGOS.CBU_CUENTA,
+        aliasDestino: CONFIG_PAGOS.ALIAS_CUENTA,
+        bancoDestino: CONFIG_PAGOS.BANCO
+      })
+    };
+
+    
+
+    console.log('Guardando pago en Firebase...', datosDelPago);
+    
+    const idDelPago = await addDataCollection('pagoChapita', datosDelPago)
+    
+    console.log('Pago guardado exitosamente con ID:', idDelPago);
+    
+      // Mostrar modal de éxito
+      setIsModalAlert(true);
+      setTipoAlert('success');
+      setMensaje({
+        tipo: 'Éxito',
+        mensaje: `Pago procesado correctamente. ID: ${idDelPago}. Te contactaremos pronto.`
+      });
       
-      // Simular éxito
-      onCerrar(); // Cerrar el modal
-      
+      // Cerrar modal después de un tiempo
+     /*  setTimeout(() => {
+        onCerrar();
+      }, 3000); */
     } catch (error) {
+      console.log(error,'error');
+      
       setIsModalAlert(true);
       setTipoAlert('error');
       setMensaje({
