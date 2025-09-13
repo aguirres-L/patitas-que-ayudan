@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Navbar } from './Navbar';
-import { obtenerProfesionalPorUid, buscarMascotasPorChip, subirImagenProfesional, updateDataCollection } from '../data/firebase/firebase';
+import { obtenerProfesionalPorUid, buscarMascotasPorChip, subirImagenProfesional, updateDataCollection, eliminarServicio } from '../data/firebase/firebase';
 import { SistemaCitas } from './SistemaCitas';
 import GestionTienda from './GestionTienda';
 import { ImageUploaderProfesional } from './ImageUploaderProfesional';
 import DecoracionForm from './decoracionUi/DecoracionForm';
+import AddServicesProfecional from './dashboardProfesional/AddServicesProfecional';
 
 // Este componente no recibe props
 const DashboardProfesional = () => {
@@ -30,6 +31,10 @@ const DashboardProfesional = () => {
   // Estados para modal de detalles de mascota
   const [mostrarModalMascota, setMostrarModalMascota] = useState(false);
   const [datosMascotaSeleccionada, setDatosMascotaSeleccionada] = useState(null);
+  
+  // Estados para modal de servicios
+  const [mostrarModalServicios, setMostrarModalServicios] = useState(false);
+  const [servicioAEditar, setServicioAEditar] = useState(null);
 
   // Cargar datos del profesional
   useEffect(() => {
@@ -138,6 +143,47 @@ const DashboardProfesional = () => {
     setDatosMascotaSeleccionada(null);
   };
 
+  // Funciones para manejar servicios
+  const handleAbrirModalServicios = () => {
+    setServicioAEditar(null);
+    setMostrarModalServicios(true);
+  };
+
+  const handleCerrarModalServicios = () => {
+    setMostrarModalServicios(false);
+    setServicioAEditar(null);
+  };
+
+  const handleEditarServicio = (servicio) => {
+    setServicioAEditar(servicio);
+    setMostrarModalServicios(true);
+  };
+
+  const handleEliminarServicio = async (servicioId) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este servicio?')) {
+      try {
+        await eliminarServicio(usuario.uid, servicioId);
+        // Recargar datos del profesional
+        const datos = await obtenerProfesionalPorUid(usuario.uid);
+        setDatosProfesional(datos);
+        alert('Servicio eliminado exitosamente');
+      } catch (error) {
+        console.error('Error al eliminar servicio:', error);
+        alert('Error al eliminar el servicio');
+      }
+    }
+  };
+
+  const handleServicioGuardado = async () => {
+    // Recargar datos del profesional
+    try {
+      const datos = await obtenerProfesionalPorUid(usuario.uid);
+      setDatosProfesional(datos);
+    } catch (error) {
+      console.error('Error al recargar datos:', error);
+    }
+  };
+
   // Renderizar contenido específico según tipo de profesional
   const renderContenidoEspecifico = () => {
     if (!datosProfesional) return null;
@@ -177,12 +223,12 @@ const DashboardProfesional = () => {
               >
                 Historial de Atenciones
               </button>
-             {/*  <button 
-                onClick={() => setMostrarCitas(true)}
+              <button 
+                onClick={() => setPestañaActiva('servicios')}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm font-medium"
               >
-                Gestionar Citas
-              </button> */}
+                Servicios
+              </button>
             </div>
           </div>
 
@@ -287,6 +333,101 @@ const DashboardProfesional = () => {
               )}
             </div>
           )}
+
+
+        {pestañaActiva === 'servicios' && (
+          <div>
+            {/* Header con botón de añadir servicio */}
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold text-gray-900">Mis Servicios</h3>
+              <button
+                onClick={handleAbrirModalServicios}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center gap-2 text-sm font-medium"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Añadir Servicio
+              </button>
+            </div>
+            
+            {/* Lista de servicios */}
+            {datosProfesional?.servicios && datosProfesional.servicios.length > 0 ? (
+              <div className="space-y-4">
+                {datosProfesional.servicios.map((servicio, index) => (
+                  <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0">
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <h5 className="font-semibold text-gray-900">
+                              {servicio.nombre || `Servicio ${index + 1}`}
+                            </h5>
+                            <p className="text-sm text-gray-600">
+                              {servicio.descripcion || 'Sin descripción'}
+                            </p>
+                            <div className="mt-1">
+                              {servicio.precio && (
+                                <p className="text-sm text-green-600 font-medium">
+                                  Precio: ${servicio.precio}
+                                </p>
+                              )}
+                              {servicio.duracion && (
+                                <p className="text-xs text-gray-500">
+                                  Duración: {servicio.duracion} minutos
+                                </p>
+                              )}
+                            </div>
+                            <div className="mt-2">
+                              <span className={`inline-block px-2 py-1 text-xs rounded-full ${
+                                servicio.activo !== false ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                              }`}>
+                                {servicio.activo !== false ? 'Activo' : 'Inactivo'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <button 
+                          className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600 transition-colors duration-200"
+                          onClick={() => handleEditarServicio(servicio)}
+                        >
+                          Editar
+                        </button>
+                        <button 
+                          className="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 transition-colors duration-200"
+                          onClick={() => handleEliminarServicio(servicio.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-gray-400 mb-4">
+                  <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-gray-600">No hay servicios registrados</p>
+                <p className="text-sm text-gray-500 mt-1">Haz clic en "Añadir Servicio" para comenzar</p>
+              </div>
+            )}
+          </div>
+        )}
+
+
         </div>
       </>
     );
@@ -339,6 +480,8 @@ const DashboardProfesional = () => {
                   </svg>
                   {datosProfesional.fotoLocalUrl ? 'Editar' : 'Agregar'}
                 </button>
+
+                
               </div>
               
               {datosProfesional.fotoLocalUrl ? (
@@ -694,6 +837,16 @@ const DashboardProfesional = () => {
           </div>
         </div>
       )}
+
+      {/* Modal de servicios */}
+      <AddServicesProfecional
+        isAbierto={mostrarModalServicios}
+        onCerrar={handleCerrarModalServicios}
+        profesionalId={usuario?.uid}
+        tipoProfesional={datosProfesional?.tipoProfesional}
+        servicioExistente={servicioAEditar}
+        onServicioGuardado={handleServicioGuardado}
+      />
     </div>
   );
 };

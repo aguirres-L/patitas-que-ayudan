@@ -25,7 +25,7 @@ export default function Hero(){
               href="/register" 
               className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-8 py-4 rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg font-semibold text-lg"
             >
-              Proteger a mi mascota
+              Registrate y crea el perfil digital de tu mascota
             </a>
             <a 
               href="#how-it-works" 
@@ -39,10 +39,10 @@ export default function Hero(){
           {/* <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mt-12 mb-8 border border-blue-100"> */}
           <div className=" p-8 mt-12 mb-8 ">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-              ¿Eres veterinarias, peluquerías o tiendas de mascotas?
+              ¿Eres dueño de una veterinaria, peluquería o tienda de mascotas?
             </h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Únete a nuestra red de veterinarias, peluquerías y tiendas de mascotas
+            Se parte de nuestra comunidad y aporta tu granito de arena para ayudar a las mascotas perdidas
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

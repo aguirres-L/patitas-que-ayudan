@@ -4,14 +4,8 @@ import ModalAlert from '../ui/svg/uiPetProfile/uiMetodoDePago/ModalAlert';
 import UiPasosTranferencia from './UiPasosTranferencia';
 import { useAuth } from '../../contexts/AuthContext';
 import { addDataCollection } from '../../data/firebase';
+import { CONFIG_PAGOS } from '../../data/firebase/config_Pagos/datosPagos';
 
-// Configuración del CBU (esto lo puedes mover a un archivo de config)
-const CONFIG_PAGOS = {
-  CBU_CUENTA: '1234567890123456789012', // Reemplaza con tu CBU real
-  ALIAS_CUENTA: 'PATITAS.AYUDA', // Reemplaza con tu alias real
-  TITULAR_CUENTA: 'Patitas que Ayudan S.A.',
-  BANCO: 'Banco de la Nación Argentina'
-};
 
 export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) {
   const { usuario } = useAuth();

@@ -58,9 +58,9 @@ const datosSlides = [
     titulo: "Reencuentros más rápidos, menos preocupaciones",
     descripcion: "Cada placa incluye un código QR indestructible que conecta al perfil digital de tu mascota.",
     caracteristicas: [
-      "Datos vitales en crisis: Contacto del dueño .",
-      "Actualización instantánea: Modifica la información en segundos sin cambiar la placa.",
-      "Tecnología que protege lo que más amas."
+      "Datos vitales en crisis: Contacto del dueño disponible al instante cuando más se necesita.",
+      "Actualización instantánea: Modifica la información en segundos sin cambiar la placa física.",
+      "Tecnología avanzada que protege lo que más amas en todo momento."
     ],
     imagenUrl: urlImages2,
     imagenAlt: "Persona escaneando QR de la placa"
@@ -71,8 +71,8 @@ const datosSlides = [
     descripcion: "Acceso a nuestro sistema de citas con profesionales registrados en nuestra plataforma.",
     caracteristicas: [
       "Agenda veterinaria: Reserva citas con especialistas registrados en nuestra plataforma.",
-     // "Ahorro garantizado: 5% de descuento en alimentos y accesorios.",
-      " Lleva el control de vacunas y consultas .",
+      "Control total: Lleva el registro de vacunas y consultas médicas.",
+      "Cuidado integral para tu mascota en un solo lugar."
     ],
     imagenUrl: urlImages3,
     imagenAlt: "App mostrando agenda de citas veterinarias"
@@ -82,49 +82,84 @@ const datosSlides = [
     titulo: "Cuando ganan, todos ganamos",
     descripcion: "Elegir nuestras placas es sumarse a un círculo virtuoso de ayuda.",
     caracteristicas: [
-      " Parte de cada compra se transforma en ayuda para animales.",
-      " Juntos hacemos que cada rastro lleve a casa.",
-      " Tu compra impulsa proyectos de bienestar animal."
+      "Parte de cada compra se transforma en ayuda directa para animales necesitados.",
+      "Juntos hacemos que cada rastro lleve a casa de forma segura y confiable.",
+      "Tu compra impulsa proyectos de bienestar animal en toda la comunidad."
     ],
     imagenUrl: urlImages4,
     imagenAlt: "Placa con huellas y símbolo de corazón"
   }
 ];
 
-// Componente interno para el slider automático de imágenes
+// Componente interno para el slider de imágenes con scroll horizontal
 function ImageSlider({ imagenes, imagenAlt }) {
+  const scrollContainerRef = useRef(null);
   const [imagenActual, setImagenActual] = useState(0);
 
-  useEffect(() => {
-    const intervalo = setInterval(() => {
-      setImagenActual((previo) => (previo + 1) % imagenes.length);
-    }, 3000); // Cambia cada 3 segundos
+  // Scroll suave al hacer clic en los indicadores
+  const irAImagen = (indice) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const imageWidth = container.offsetWidth;
+      container.scrollTo({
+        left: indice * imageWidth,
+        behavior: 'smooth'
+      });
+      setImagenActual(indice);
+    }
+  };
 
-    return () => clearInterval(intervalo);
-  }, [imagenes.length]);
+  // Detectar scroll para actualizar imagen actual
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const imageWidth = container.offsetWidth;
+    const scrollLeft = container.scrollLeft;
+    const newImageIndex = Math.round(scrollLeft / imageWidth);
+    
+    if (newImageIndex !== imagenActual && newImageIndex >= 0 && newImageIndex < imagenes.length) {
+      setImagenActual(newImageIndex);
+    }
+  };
 
   return (
     <div className="relative h-full min-h-[350px] sm:min-h-[400px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
-      {imagenes.map((imagen, index) => (
-        <img
-          key={index}
-          src={imagen}
-          alt={`${imagenAlt} ${index + 1}`}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
-            index === imagenActual ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
-          }`}
-        />
-      ))}
+      {/* Contenedor de scroll horizontal para las imágenes */}
+      <div 
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth h-full"
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
+        {imagenes.map((imagen, index) => (
+          <div 
+            key={index}
+            className="flex-shrink-0 w-full snap-start"
+            style={{ minWidth: '100%' }}
+          >
+            <img
+              src={imagen}
+              alt={`${imagenAlt} ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
       
-        {/* Overlay gradiente sutil */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent"></div>
+      {/* Overlay gradiente sutil */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent pointer-events-none"></div>
       
       {/* Indicadores de imágenes - centrados en la parte inferior */}
       <div className="absolute p-2 bg-black/50 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {imagenes.map((_, index) => (
           <button
             key={index}
-            onClick={() => setImagenActual(index)}
+            onClick={() => irAImagen(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
               index === imagenActual
                 ? 'bg-blue-500 scale-125 shadow-lg'
@@ -140,19 +175,9 @@ function ImageSlider({ imagenes, imagenAlt }) {
 
 export default function SliderHome() {
   const [slideActual, setSlideActual] = useState(0);
-  const scrollContainerRef = useRef(null);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const irASlide = (indice) => {
     setSlideActual(indice);
-    // Scroll automático al slide seleccionado
-    if (scrollContainerRef.current) {
-      const slideWidth = scrollContainerRef.current.offsetWidth;
-      scrollContainerRef.current.scrollTo({
-        left: indice * slideWidth,
-        behavior: 'smooth'
-      });
-    }
   };
 
   const slideAnterior = () => {
@@ -165,56 +190,12 @@ export default function SliderHome() {
     irASlide(nuevoIndice);
   };
 
-  // Detectar scroll para actualizar slide actual
-  const handleScroll = () => {
-    if (!scrollContainerRef.current || isScrolling) return;
-    
-    const container = scrollContainerRef.current;
-    const slideWidth = container.offsetWidth;
-    const scrollLeft = container.scrollLeft;
-    const newSlideIndex = Math.round(scrollLeft / slideWidth);
-    
-    if (newSlideIndex !== slideActual) {
-      setSlideActual(newSlideIndex);
-    }
-  };
-
-  // Scroll automático al slide actual cuando cambie
-  useEffect(() => {
-    if (scrollContainerRef.current && !isScrolling) {
-      const slideWidth = scrollContainerRef.current.offsetWidth;
-      scrollContainerRef.current.scrollTo({
-        left: slideActual * slideWidth,
-        behavior: 'smooth'
-      });
-    }
-  }, [slideActual]);
-
   const slideActualData = datosSlides[slideActual];
 
   return (
     <section className="relative md:py-16 sm:py-6 lg:py-8">
-      {/* Estilos CSS personalizados para scroll horizontal */}
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .snap-x {
-          scroll-snap-type: x mandatory;
-        }
-        .snap-start {
-          scroll-snap-align: start;
-        }
-        .scroll-smooth {
-          scroll-behavior: smooth;
-        }
-      `}</style>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-1">
+      <div className="container mx-auto px-2 sm:px-1 lg:px-1">
         <div className="max-w-7xl mx-auto">
           {/* Título de la sección */}
           <div className="text-center mb-4 sm:mb-2 lg:mb-8">
@@ -227,105 +208,117 @@ export default function SliderHome() {
           </div>
 
           {/* Contenedor del slider */}
-          <div className="relative bg-white rounded-xl mb-8 sm:rounded-2xl shadow-xl sm:shadow-2xl overflow-hidden">
-            {/* Versión móvil con scroll horizontal */}
-            <div className="lg:hidden">
-              <div 
-                ref={scrollContainerRef}
-                onScroll={handleScroll}
-                className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth"
-                style={{ 
-                  scrollbarWidth: 'none', 
-                  msOverflowStyle: 'none',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                {datosSlides.map((slide, index) => (
-                  <div 
-                    key={slide.id}
-                    className="flex-shrink-0 w-full snap-start"
-                    style={{ minWidth: '100%' }}
-                  >
-                    <div className="flex flex-col min-h-[650px]">
-                      {/* Imagen */}
-                      <div className="h-[350px] sm:h-[400px] relative overflow-hidden">
-                        <ImageSlider 
-                          imagenes={slide.imagenUrl} 
-                          imagenAlt={slide.imagenAlt}
-                        />
-                      </div>
+          <div className="relative">
+            {/* Versión móvil con navegación por botones */}
+            <div className="lg:hidden"> 
 
-                      {/* Contenido */}
-                      <div className="p-4 sm:p-6 flex flex-col justify-center flex-1">
-                        <div className="space-y-4 sm:space-y-6">
-                          {/* Header con número y indicadores */}
-                          <div className="flex flex-row items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xl sm:text-2xl font-bold text-orange-500">
-                                {String(index + 1).padStart(2, '0')}
-                              </span>
-                              <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
-                            </div>
-                            
-                            {/* Indicador de progreso */}
-                            <div className="flex items-center space-x-2">
-                              <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-orange-500 rounded-full transition-all duration-500 ease-out"
-                                  style={{ 
-                                    width: `${((index + 1) / datosSlides.length) * 100}%`
-                                  }}
-                                />
-                              </div>
-                            </div>
+              {/* Card del slider */}
+              <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+                <div className="flex flex-col min-h-[650px]">
+                  {/* Imagen */}
+                  <div className="h-[350px] sm:h-[400px] relative overflow-hidden">
+                    <ImageSlider 
+                      imagenes={datosSlides[slideActual].imagenUrl} 
+                      imagenAlt={datosSlides[slideActual].imagenAlt}
+                    />
+                  </div>
+
+                  {/* Contenido */}
+                  <div className="p-10 sm:p-14 flex flex-col justify-center flex-1">
+                    <div className="space-y-4 sm:space-y-6">
+                      {/* Header con número y indicadores */}
+                      <div className="flex flex-row items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xl sm:text-2xl font-bold text-orange-500">
+                            {String(slideActual + 1).padStart(2, '0')}
+                          </span>
+                          <span className="text-gray-400 text-sm sm:text-base">/ {String(datosSlides.length).padStart(2, '0')}</span>
+                        </div>
+                        
+                        {/* Indicador de progreso */}
+                        <div className="flex items-center space-x-2">
+                          <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-orange-500 rounded-full transition-all duration-500 ease-out"
+                              style={{ 
+                                width: `${((slideActual + 1) / datosSlides.length) * 100}%`
+                              }}
+                            />
                           </div>
-
-                          {/* Título */}
-                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
-                            {slide.titulo}
-                          </h3>
-
-                          {/* Descripción */}
-                          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                            {slide.descripcion}
-                          </p>
-
-                          {/* Características */}
-                          <ul className="space-y-2 sm:space-y-3">
-                            {slide.caracteristicas.map((caracteristica, idx) => (
-                              <li key={idx} className="flex items-start space-x-2 sm:space-x-3">
-                                <span className="text-orange-500 text-base sm:text-lg mt-0.5 flex-shrink-0">
-                                  {idx === 0 ? '✨' : idx === 1 ? '✅' : idx === 2 ? '🩺' : '🤝'}
-                                </span>
-                                <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{caracteristica}</span>
-                              </li>
-                            ))}
-                          </ul>
                         </div>
                       </div>
+
+                      {/* Título */}
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
+                        {datosSlides[slideActual].titulo}
+                      </h3>
+
+                      {/* Descripción */}
+                      <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                        {datosSlides[slideActual].descripcion}
+                      </p>
+
+                      {/* Características */}
+                      <ul className="space-y-2 sm:space-y-3">
+                        {datosSlides[slideActual].caracteristicas.map((caracteristica, idx) => (
+                          <li key={idx} className="flex items-start space-x-2 sm:space-x-3">
+                            <span className="text-orange-500 text-base sm:text-lg mt-0.5 flex-shrink-0">
+                              {idx === 0 ? '✨' : idx === 1 ? '✅' : idx === 2 ? '🩺' : '🤝'}
+                            </span>
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{caracteristica}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
 
-              {/* Indicadores de scroll horizontal */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
-                {datosSlides.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => irASlide(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-125 ${
-                      index === slideActual
-                        ? 'bg-orange-500 scale-125 shadow-lg'
-                        : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                    aria-label={`Ir al slide ${index + 1}`}
-                  />
-                ))}
+                {/* Indicadores de puntos móvil */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                  {datosSlides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => irASlide(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-125 ${
+                        index === slideActual
+                          ? 'bg-orange-500 scale-125 shadow-lg'
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                      aria-label={`Ir al slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Versión desktop (mantiene el diseño original) */}
+            {/* Botones de navegación móvil - POSICIÓN FIJA */}
+            <div className="lg:hidden">
+              <div className="absolute top-1/2 left-[-12px] transform -translate-y-1/2 z-20">
+                <button
+                  onClick={slideAnterior}
+                  className="w-10 h-10 bg-white/95 hover:bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 border border-gray-200"
+                  aria-label="Slide anterior"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="absolute top-1/2 right-[-12px] transform -translate-y-1/2 z-20">
+                <button
+                  onClick={slideSiguiente}
+                  className="w-10 h-10 bg-white/95 hover:bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 border border-gray-200"
+                  aria-label="Slide siguiente"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Versión desktop con botones de navegación */}
             <div className="hidden lg:flex flex-row min-h-[500px]">
               {/* Imagen (izquierda en desktop) */}
               <div className="w-1/2 h-auto relative overflow-hidden">
@@ -349,7 +342,7 @@ export default function SliderHome() {
                   </div>
 
                   {/* Título */}
-                  <h3 className="text-3xl font-bold text-gray-800 leading-tight">
+                  <h3 className="text-3xl font-bold z-10 text-gray-800 leading-tight">
                     {slideActualData.titulo}
                   </h3>
 
@@ -370,6 +363,31 @@ export default function SliderHome() {
                     ))}
                   </ul>
                 </div>
+              </div>
+
+              {/* Botones de navegación desktop */}
+              <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+                <button
+                  onClick={slideAnterior}
+                  className="w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+                  aria-label="Slide anterior"
+                >
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <button
+                  onClick={slideSiguiente}
+                  className="w-12 h-12 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+                  aria-label="Slide siguiente"
+                >
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>

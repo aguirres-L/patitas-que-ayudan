@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import MetodoDePagoSub from './metodoDePagoSub/MetodoDePagoSub';
 
 // Este componente no recibe props
 const AccesoBloqueado = () => {
   const { datosUsuario, cerrarSesion } = useAuth();
+  const [showMetodoDePag, setshowMetodoDePag] = useState(false);
 
   const handleCerrarSesion = async () => {
     try {
@@ -12,6 +14,12 @@ const AccesoBloqueado = () => {
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
+  };
+
+
+  const handleShowMetodoDePag = () => {
+    console.log('showMetodoDePag', showMetodoDePag);
+    setshowMetodoDePag(true);
   };
 
   return (
@@ -23,6 +31,7 @@ const AccesoBloqueado = () => {
       </div>
 
       <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      {!showMetodoDePag && (
         <div className="max-w-2xl mx-auto text-center">
           {/* Icono de bloqueo */}
           <div className="mx-auto h-20 w-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
@@ -65,9 +74,14 @@ const AccesoBloqueado = () => {
 
           {/* Botones de acción */}
           <div className="space-y-4">
-            <button className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:scale-105">
+
+
+            <button onClick={handleShowMetodoDePag} className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:scale-105">
               Renovar Membresía - $5.000/mes
             </button>
+
+          
+
             
             <div className="flex space-x-4">
               <button
@@ -110,8 +124,15 @@ const AccesoBloqueado = () => {
               <li>• ✅ Soporte prioritario</li>
             </ul>
           </div> */}
+       
+      
         </div>
+      )}
+      {showMetodoDePag && (
+              <MetodoDePagoSub />
+            )}
       </div>
+
     </div>
   );
 };

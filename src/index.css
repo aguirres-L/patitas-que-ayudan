@@ -7,32 +7,84 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Animaciones personalizadas */
+/* Animaciones personalizadas - Efecto Lámpara de Lava */
 @keyframes blob {
   0% {
-    transform: translate(0px, 0px) scale(1);
+    transform: translate(0px, 0px) scale(1) skew(0deg, 0deg);
   }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
+  12.5% {
+    transform: translate(15px, -20px) scale(1.02) skew(2deg, -1deg);
   }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
+  25% {
+    transform: translate(35px, -40px) scale(1.08) skew(3deg, -2deg);
+  }
+  37.5% {
+    transform: translate(25px, -15px) scale(1.05) skew(1deg, 1deg);
+  }
+  50% {
+    transform: translate(-15px, 25px) scale(0.98) skew(-2deg, 2deg);
+  }
+  62.5% {
+    transform: translate(-30px, 15px) scale(0.95) skew(-3deg, 1deg);
+  }
+  75% {
+    transform: translate(20px, 25px) scale(1.03) skew(1deg, -1deg);
+  }
+  87.5% {
+    transform: translate(8px, 10px) scale(1.01) skew(0deg, 1deg);
   }
   100% {
-    transform: translate(0px, 0px) scale(1);
+    transform: translate(0px, 0px) scale(1) skew(0deg, 0deg);
+  }
+}
+
+@keyframes blob-viscous {
+  0% {
+    transform: translate(0px, 0px) scale(1) skew(0deg, 0deg) rotate(0deg);
+  }
+  20% {
+    transform: translate(25px, -35px) scale(1.1) skew(4deg, -3deg) rotate(5deg);
+  }
+  40% {
+    transform: translate(15px, -15px) scale(1.05) skew(2deg, 1deg) rotate(-3deg);
+  }
+  60% {
+    transform: translate(-20px, 25px) scale(0.92) skew(-3deg, 2deg) rotate(2deg);
+  }
+  80% {
+    transform: translate(18px, 15px) scale(1.06) skew(2deg, -2deg) rotate(-1deg);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1) skew(0deg, 0deg) rotate(0deg);
   }
 }
 
 .animate-blob {
-  animation: blob 7s infinite;
+  animation: blob 8s ease-in-out infinite;
+}
+
+.animate-blob-viscous {
+  animation: blob-viscous 10s ease-in-out infinite;
+}
+
+.animate-blob-fast {
+  animation: blob 4s ease-in-out infinite;
 }
 
 .animation-delay-2000 {
-  animation-delay: 2s;
+  animation-delay: 1.5s;
 }
 
 .animation-delay-4000 {
-  animation-delay: 4s;
+  animation-delay: 3s;
+}
+
+.animation-delay-1000 {
+  animation-delay: 0.8s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 4.5s;
 }
 
 /* Utilidad para truncar texto */

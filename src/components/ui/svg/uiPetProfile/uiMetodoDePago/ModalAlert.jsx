@@ -1,8 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import DecoracionForm from "../../../../decoracionUi/DecoracionForm";
 
 
 
 export default function ModalAlert({ typeAlert, mensaje, onCerrar }) {
+
+
+
+  const navigate = useNavigate();
+    
+    function handleButton(){
+        if(mensaje?.from === 'suscripcion'){
+            navigate('/');
+        }else{
+            navigate('/perfil');
+        }
+        onCerrar();
+    }
 
     // Alerta informativa para errores de pago (tono amable, no dramático)
     if (typeAlert === 'error') {
@@ -109,8 +123,8 @@ export default function ModalAlert({ typeAlert, mensaje, onCerrar }) {
                             </svg>
                         </span>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-100">Pago realizado con éxito</h3>
-                            <p className="text-sm font-medium text-gray-200">Gracias por tu pago. Tu mascota recibira su chapita en la brevedad.</p>
+                            <h3 className="text-lg font-bold text-gray-100">{mensaje?.tipo || 'Pago realizado con éxito'}</h3>
+                            <p className="text-sm font-medium text-gray-200">Gracias por tu pago. Te contactaremos pronto.</p>
                         </div>
                     </div>
                     <button
@@ -122,14 +136,14 @@ export default function ModalAlert({ typeAlert, mensaje, onCerrar }) {
                     </button>
                 </div>
                 <div className="p-6 bg-gray-800 bg-opacity-60">
-                    <p className="text-gray-100">Gracias por tu pago. Tu mascota recibira su chapita en la brevedad.</p>
+                    <p className="text-gray-100">{mensaje?.mensaje || 'Gracias por tu pago. Te contactaremos pronto.'}</p>
                 </div>
                 <div className="flex justify-end gap-3 p-4 bg-gray-800 bg-opacity-60">
                     <button
-                        onClick={onCerrar}
+                        onClick={handleButton}
                         className="px-4 py-2 text-sm font-semibold text-white transition-colors rounded-lg bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
                     >
-                        Volver al perfil
+                        {mensaje?.from === 'suscripcion' ? 'Volver al home' : 'Volver al perfil'}
                     </button>
                 </div>
                 </div>

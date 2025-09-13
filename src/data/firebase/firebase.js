@@ -1063,4 +1063,151 @@ export const eliminarCitaCompleta = async (cita) => {
   }
 };
 
+// ==================== FUNCIONES DE SERVICIOS ====================
+
+/**
+ * Agrega un nuevo servicio al array de servicios de un profesional
+ * @param {string} profesionalId - ID del profesional
+ * @param {Object} servicio - Datos del servicio
+ * @returns {Promise<string>} - ID del servicio creado
+ */
+export const agregarServicio = async (profesionalId, servicio) => {
+  try {
+    const profesionalRef = doc(db, "profesionales", profesionalId);
+    
+    // Generar ID único para el servicio
+    const servicioId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    
+    const servicioCompleto = {
+      id: servicioId,
+      ...servicio,
+      fechaCreacion: new Date(),
+      fechaActualizacion: new Date(),
+      activo: true
+    };
+    
+    await updateDoc(profesionalRef, {
+      servicios: arrayUnion(servicioCompleto)
+    });
+    
+    console.log(`Servicio creado con ID: ${servicioId} en profesional ${profesionalId}`);
+    return servicioId;
+  } catch (error) {
+    console.error('Error al crear servicio:', error);
+    throw error;
+  }
+};
+
+/**
+ * Actualiza un servicio existente en el array de servicios del profesional
+ * @param {string} profesionalId - ID del profesional
+ * @param {string} servicioId - ID del servicio
+ * @param {Object} datosActualizados - Datos a actualizar
+ * @returns {Promise<void>}
+ */
+export const actualizarServicio = async (profesionalId, servicioId, datosActualizados) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.servicios) {
+      throw new Error('Profesional no encontrado o sin servicios');
+    }
+    
+    // Actualizar el servicio específico en el array
+    const serviciosActualizados = profesional.servicios.map(servicio => 
+      servicio.id === servicioId 
+        ? { ...servicio, ...datosActualizados, fechaActualizacion: new Date() }
+        : servicio
+    );
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      servicios: serviciosActualizados
+    });
+    
+    console.log(`Servicio ${servicioId} actualizado exitosamente`);
+  } catch (error) {
+    console.error('Error al actualizar servicio:', error);
+    throw error;
+  }
+};
+
+/**
+ * Elimina un servicio del array de servicios del profesional
+ * @param {string} profesionalId - ID del profesional
+ * @param {string} servicioId - ID del servicio
+ * @returns {Promise<void>}
+ */
+export const eliminarServicio = async (profesionalId, servicioId) => {
+  try {
+    // Primero obtener el profesional actual
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.servicios) {
+      throw new Error('Profesional no encontrado o sin servicios');
+    }
+    
+    // Filtrar el servicio a eliminar
+    const serviciosActualizados = profesional.servicios.filter(servicio => servicio.id !== servicioId);
+    
+    // Actualizar el documento del profesional
+    await updateDataCollection('profesionales', profesionalId, {
+      servicios: serviciosActualizados
+    });
+    
+    console.log(`Servicio ${servicioId} eliminado exitosamente`);
+  } catch (error) {
+    console.error('Error al eliminar servicio:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene todos los servicios de un profesional
+ * @param {string} profesionalId - ID del profesional
+ * @returns {Promise<Array>} - Array de servicios
+ */
+export const obtenerServiciosPorProfesional = async (profesionalId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.servicios) {
+      return [];
+    }
+    
+    // Filtrar solo servicios activos y ordenar por fecha de creación
+    const serviciosActivos = profesional.servicios
+      .filter(servicio => servicio.activo !== false)
+      .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+    
+    return serviciosActivos;
+  } catch (error) {
+    console.error('Error al obtener servicios del profesional:', error);
+    throw error;
+  }
+};
+
+/**
+ * Obtiene un servicio específico por ID dentro del profesional
+ * @param {string} profesionalId - ID del profesional
+ * @param {string} servicioId - ID del servicio
+ * @returns {Promise<Object|null>} - Servicio encontrado o null
+ */
+export const obtenerServicioPorId = async (profesionalId, servicioId) => {
+  try {
+    const profesional = await getDataById('profesionales', profesionalId);
+    
+    if (!profesional || !profesional.servicios) {
+      return null;
+    }
+    
+    const servicio = profesional.servicios.find(s => s.id === servicioId);
+    return servicio || null;
+  } catch (error) {
+    console.error('Error al obtener servicio por ID:', error);
+    throw error;
+  }
+};
+
 // ... existing code ...
