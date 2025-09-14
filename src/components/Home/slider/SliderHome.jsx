@@ -124,7 +124,7 @@ function ImageSlider({ imagenes, imagenAlt }) {
   };
 
   return (
-    <div className="relative h-full min-h-[350px] sm:min-h-[400px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden">
       {/* Contenedor de scroll horizontal para las imágenes */}
       <div 
         ref={scrollContainerRef}
@@ -139,7 +139,7 @@ function ImageSlider({ imagenes, imagenAlt }) {
         {imagenes.map((imagen, index) => (
           <div 
             key={index}
-            className="flex-shrink-0 w-full snap-start"
+            className="flex-shrink-0 w-full snap-start h-full"
             style={{ minWidth: '100%' }}
           >
             <img
@@ -203,8 +203,9 @@ export default function SliderHome() {
               ¿Por qué elegir nuestras chapitas?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              Más que identificación, una experiencia completa de cuidado y protección
+              Más que identificación, una experiencia completa de cuidado y protección.
             </p>
+            
           </div>
 
           {/* Contenedor del slider */}
@@ -319,9 +320,9 @@ export default function SliderHome() {
             </div>
 
             {/* Versión desktop con botones de navegación */}
-            <div className="hidden lg:flex flex-row min-h-[500px]">
+            <div className="hidden lg:flex flex-row h-[600px] bg-white rounded-xl shadow-xl overflow-hidden">
               {/* Imagen (izquierda en desktop) */}
-              <div className="w-1/2 h-auto relative overflow-hidden">
+              <div className="w-1/2 h-full relative overflow-hidden">
                 <ImageSlider 
                   imagenes={slideActualData.imagenUrl} 
                   imagenAlt={slideActualData.imagenAlt}
@@ -329,8 +330,8 @@ export default function SliderHome() {
               </div>
 
               {/* Contenido (derecha en desktop) */}
-              <div className="w-1/2 p-8 xl:p-12 flex flex-col justify-center">
-                <div className="space-y-6">
+              <div className="w-1/2 p-8 xl:p-12 flex flex-col justify-center h-full">
+                <div className="space-y-6 h-full flex flex-col justify-center">
                   <div className="flex flex-row">
                     {/* Número de slide */}
                     <div className="flex items-center space-x-2">
@@ -352,7 +353,7 @@ export default function SliderHome() {
                   </p>
 
                   {/* Características */}
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 flex-1">
                     {slideActualData.caracteristicas.map((caracteristica, index) => (
                       <li key={index} className="flex items-start space-x-3">
                         <span className="text-orange-500 text-lg mt-0.5 flex-shrink-0">

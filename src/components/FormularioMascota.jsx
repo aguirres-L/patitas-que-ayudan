@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageUploader } from './ImageUploader';
 import { useAuth } from '../contexts/AuthContext';
+import BusquedaAvanzada from './uiDashboardUser/BusquedaAvanzada';
 
 // Este componente no recibe props opcionales.
 export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
@@ -11,6 +12,7 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
 
   // Identificación simple
   const [nombre, setNombre] = useState('');
+  const [razaSeleccionada, setRazaSeleccionada] = useState('');
   const [raza, setRaza] = useState('');
   const [edad, setEdad] = useState('');
   const [color, setColor] = useState('');
@@ -33,6 +35,15 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
 
   // Generar ID único para esta mascota (una sola vez)
   const [mascotaId] = useState(() => generarIdUnico());
+
+  // Sincronizar raza seleccionada con el campo de raza
+  useEffect(() => {
+    if (razaSeleccionada) {
+      setRaza(razaSeleccionada);
+      // Cambiar automáticamente al tab de identificación para mostrar la raza seleccionada
+      setTab(0);
+    }
+  }, [razaSeleccionada]);
 
   // Animación simple para tabs
   const tabClasses = (active) =>
@@ -61,7 +72,7 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
     const mascotaConId = {
       id: mascotaId, // Usar el ID generado al inicio
       nombre,
-      raza,
+      raza: razaSeleccionada || raza,
       edad: Number(edad),
       color,
       fotoUrl: urlImagenMascota, // Usar la URL de la imagen subida
@@ -79,6 +90,7 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
     // Limpia el formulario
     setNombre('');
     setRaza('');
+    setRazaSeleccionada('');
     setEdad('');
     setColor('');
     setArchivoImagen(null);
@@ -110,7 +122,7 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
           className={tabClasses(tab === 1) + " w-full sm:w-auto"}
           onClick={() => setTab(1)}
         >
-          Detalles avanzados
+          Busqueda avanzada
         </button>
       </div>
 
@@ -125,13 +137,24 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
               onChange={e => setNombre(e.target.value)}
               required
             />
-            <input
-              className="border rounded px-3 py-2 w-full text-base"
-              placeholder="Raza"
-              value={raza}
-              onChange={e => setRaza(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <input
+                className={`border rounded px-3 py-2 w-full text-base ${
+                  razaSeleccionada ? 'border-green-400 bg-green-50' : 'border-gray-300'
+                }`}
+                placeholder="Raza"
+                value={raza}
+                onChange={e => setRaza(e.target.value)}
+                required
+              />
+              {razaSeleccionada && (
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                  <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
+            </div>
             <input
               className="border rounded px-3 py-2 w-full text-base"
               placeholder="Edad"
@@ -164,64 +187,31 @@ export const FormularioMascota = ({onAgregarMascota, isCargando }) => {
         )}
 
         {tab === 1 && (
-          <div className="animate-fade-in flex flex-col gap-3">
-            <div>
-              <label className="block text-sm font-medium mb-1">Vacunas</label>
-              {vacunas.map((vacuna, idx) => (
-                <div key={idx} className="flex ms:w-1/2 flex-col flex-row gap-2 mb-2">
-                  <input
-                    className="border rounded px-3 py-2 flex-1 text-base"
-                    placeholder="Nombre vacuna"
-                    value={vacuna.nombre}
-                    onChange={e =>
-                      handleVacunaChange(idx, 'nombre', e.target.value)
-                    }
-                  />
-                  <input
-                    className="border rounded px-3 py-2 flex-1 text-base"
-                    type="date"
-                    value={vacuna.fecha}
-                    onChange={e =>
-                      handleVacunaChange(idx, 'fecha', e.target.value)
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="text-red-500 font-bold px-2"
-                    onClick={() => eliminarVacuna(idx)}
-                    tabIndex={-1}
-                  >
-                    ×
-                  </button>
+          <div className="space-y-4">
+            <BusquedaAvanzada 
+              onRazaSeleccionada={setRazaSeleccionada}
+              razaSeleccionada={razaSeleccionada}
+            />
+            
+            {/* Indicador de raza seleccionada */}
+            {razaSeleccionada && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <p className="text-sm text-green-600 font-medium">Raza seleccionada:</p>
+                    <p className="text-lg font-semibold text-green-800 capitalize">
+                      {razaSeleccionada}
+                    </p>
+                    <p className="text-xs text-green-600 mt-1">
+                      Esta raza se ha agregado automáticamente al formulario
+                    </p>
+                  </div>
                 </div>
-              ))}
-              <button
-                type="button"
-                className="text-orange-600 hover:underline text-sm"
-                onClick={agregarVacuna}
-              >
-                + Agregar vacuna
-              </button>
-            </div>
-            <input
-              className="border rounded px-3 py-2 w-full text-base"
-              placeholder="Alergias"
-              value={alergias}
-              onChange={e => setAlergias(e.target.value)}
-            />
-            <input
-              className="border rounded px-3 py-2 w-full text-base"
-              placeholder="Enfermedades"
-              value={enfermedades}
-              onChange={e => setEnfermedades(e.target.value)}
-            />
-            <textarea
-              className="border rounded px-3 py-2 w-full text-base"
-              placeholder="Notas adicionales"
-              value={notas}
-              onChange={e => setNotas(e.target.value)}
-              rows={2}
-            />
+              </div>
+            )}
           </div>
         )}
       </div>

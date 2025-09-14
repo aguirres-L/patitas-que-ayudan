@@ -71,6 +71,7 @@ const Dashboard = () => {
     direccion: profesional.direccion,
     telefono: profesional.telefono,
     especialidades: profesional.especialidad ? [profesional.especialidad] : [],
+    servicios: profesional.servicios ? profesional.servicios.map(servicio => servicio.nombre) : [],
     horario: profesional.horario || 'Horario no disponible',
     calificacion: 4.5, // Valor por defecto, se puede implementar sistema de calificaciones después
     distancia: 'Distancia no disponible', // Se puede implementar geolocalización después
@@ -82,7 +83,7 @@ const Dashboard = () => {
     nombre: profesional.nombre,
     direccion: profesional.direccion,
     telefono: profesional.telefono,
-    servicios: profesional.especialidad ? [profesional.especialidad] : [],
+    servicios: profesional.servicios ? profesional.servicios.map(servicio => servicio.nombre) : [],
     horario: profesional.horario || 'Horario no disponible',
     calificacion: 4.5, // Valor por defecto
     distancia: 'Distancia no disponible',

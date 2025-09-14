@@ -359,7 +359,7 @@ const DashboardSuperAdmin = () => {
       />
 
       {/* Main Content */}
-      <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div className="relative container mx-auto py-6 px-4 sm:px-6 ">
         {/* Header del Dashboard */}
         <div className="text-center mt-4 mb-8">
           <h2 className={typeTheme === 'light'
@@ -539,6 +539,16 @@ const DashboardSuperAdmin = () => {
                 }`}
               >
                 Usuarios Comunes
+              </button>
+              <button 
+                onClick={() => setPestañaActiva('liquidaciones')}
+                className={`pb-2 font-medium transition-colors duration-200 whitespace-nowrap ${
+                  pestañaActiva === 'liquidaciones' 
+                    ? 'border-b-2 border-red-500 text-red-600' 
+                    : 'text-gray-600 hover:text-gray-800 hover:border-b-2 hover:border-gray-300'
+                }`}
+              >
+                Liquidaciones
               </button>
               <button 
                 onClick={() => setPestañaActiva('profesionales')}

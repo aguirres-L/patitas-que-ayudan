@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import UiLiquidacionesUserComun from './UiLiquidacionUserComun';
 
 export default function ModalDetailUserComun({ 
   usuario, 
@@ -9,6 +10,11 @@ export default function ModalDetailUserComun({
 }) {
   const { typeTheme } = useTheme();
   
+
+   // controles para la vista del modal de liquidaciones
+  const [isShowLiquidaciones, setIsShowLiquidaciones] = useState(false);
+
+
   // Estados para edición
   const [isEditando, setIsEditando] = useState(false);
   const [datosEditados, setDatosEditados] = useState({
@@ -89,7 +95,7 @@ export default function ModalDetailUserComun({
       tipoMensualidad: nuevaMensualidad
     }));
   };
-
+  
   return (
     <div className="fixed h-screen w-screen inset-0 z-50 overflow-y-auto">
       {/* Overlay */}
@@ -142,8 +148,10 @@ export default function ModalDetailUserComun({
 
           {/* Contenido del Modal */}
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
+             
+             {!isShowLiquidaciones && (
+              <>
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Información Personal */}
               <div className={`rounded-xl p-6 ${
                 typeTheme === 'light' ? 'bg-gray-50' : 'bg-gray-700'
@@ -209,12 +217,15 @@ export default function ModalDetailUserComun({
               <div className={`rounded-xl p-6 ${
                 typeTheme === 'light' ? 'bg-gray-50' : 'bg-gray-700'
               }`}>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-center mb-4 flex-col sm:flex-row sm:space-x-2 ">
                   <h3 className={`text-lg font-semibold ${
                     typeTheme === 'light' ? 'text-gray-900' : 'text-white'
                   }`}>
                     Estado de la Cuenta
                   </h3>
+                 
+                  <div className="flex flex-col  sm:flex-row  sm:space-x-2">
+
                   {!isEditando && (
                     <button
                       onClick={handleIniciarEdicion}
@@ -223,6 +234,15 @@ export default function ModalDetailUserComun({
                       Editar
                     </button>
                   )}
+                    <button
+                      onClick={() => setIsShowLiquidaciones(true)}
+                      className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                    >
+                      Pagos
+                    </button>
+                  </div>
+
+
                 </div>
                 <div className="space-y-3">
                   <div>
@@ -419,6 +439,16 @@ export default function ModalDetailUserComun({
                 </p>
               </div>
             )}
+              </>
+             )}
+
+            {isShowLiquidaciones && (
+              <UiLiquidacionesUserComun 
+                setIsShowLiquidaciones={setIsShowLiquidaciones} 
+                usuario={usuario}
+              />
+            )}
+
           </div>
 
           {/* Footer del Modal */}
@@ -465,6 +495,7 @@ export default function ModalDetailUserComun({
               </>
             )}
           </div>
+          
         </div>
       </div>
     </div>

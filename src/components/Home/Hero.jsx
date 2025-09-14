@@ -5,14 +5,15 @@ export default function Hero(){
     return(
         <section className="relative container mx-auto md:py-20 py-12 mt-6 px-4 text-center">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800  leading-tight">
-            Protege a tu mascota y{' '}
+
+          <h1 className="text-4xl mb-6 md:text-6xl font-bold text-gray-800 leading-tight">
+            Protege a tu mejor amigo y{' '}
             <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
               ayuda a rescatar
             </span>{' '}
             a otras mascotas perdidas
           </h1>
-          {/* <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+         {/*  <p className=" md:text-xl text-gray-600 mb-1 leading-relaxed">
             Chapitas de acero grabadas con láser que protegen a tu mejor amigo y ayudan a rescatar animales en situación de calle
           </p> */}
 

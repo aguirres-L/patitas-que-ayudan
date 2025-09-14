@@ -9,6 +9,7 @@ export const FormularioCitaPeluqueria = ({
   onEnviar
 }) => {
   const { usuario, datosUsuario } = useAuth();
+  console.log(peluqueria,'peluqueria');
   
   const [formData, setFormData] = useState({
     peluqueriaId: peluqueria.id,
@@ -31,18 +32,7 @@ export const FormularioCitaPeluqueria = ({
   const [isCargando, setIsCargando] = useState(false);
   const [errores, setErrores] = useState({});
 
-  const serviciosDisponibles = [
-    'Baño y corte',
-    'Cepillado profundo',
-    'Corte de uñas',
-    'Limpieza de oídos',
-    'Tratamiento anti-pulgas',
-    'Masaje relajante',
-    'Aromaterapia',
-    'Corte de raza específico',
-    'Baño terapéutico',
-    'Secado profesional'
-  ];
+  const serviciosDisponibles = peluqueria.servicios;
 
   const tiposCorte = [
     'Corte de raza',
@@ -59,7 +49,7 @@ export const FormularioCitaPeluqueria = ({
 
     if (!formData.fecha) nuevosErrores.fecha = 'La fecha es obligatoria';
     if (!formData.hora) nuevosErrores.hora = 'La hora es obligatoria';
-    if (formData.servicios.length === 0) nuevosErrores.servicios = 'Selecciona al menos un servicio';
+/*     if (formData.servicios.length === 0) nuevosErrores.servicios = 'Selecciona al menos un servicio'; */
     if (!formData.telefonoContacto) nuevosErrores.telefonoContacto = 'El teléfono es obligatorio';
 
     setErrores(nuevosErrores);
@@ -217,19 +207,28 @@ export const FormularioCitaPeluqueria = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Servicios Deseados *
             </label>
-            <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-3">
-              {serviciosDisponibles.map(servicio => (
-                <label key={servicio} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.servicios.includes(servicio)}
-                    onChange={() => manejarServicio(servicio)}
-                    className="mr-2 text-purple-600 focus:ring-purple-500"
-                  />
-                  <span className="text-sm">{servicio}</span>
-                </label>
-              ))}
-            </div>
+            {serviciosDisponibles && serviciosDisponibles.length > 0 ? (
+              <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-3">
+                {serviciosDisponibles.map(servicio => {
+                  console.log(servicio, 'servicio');
+                  return (
+                    <label key={servicio} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={formData.servicios.includes(servicio)}
+                        onChange={() => manejarServicio(servicio)}
+                        className="mr-2 text-purple-600 focus:ring-purple-500"
+                      />
+                      <span className="text-sm">{servicio}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <p className="text-sm text-purple-600">No hay servicios disponibles</p>
+              </div>
+            )}
             {errores.servicios && <p className="text-red-500 text-xs mt-1">{errores.servicios}</p>}
           </div>
 
