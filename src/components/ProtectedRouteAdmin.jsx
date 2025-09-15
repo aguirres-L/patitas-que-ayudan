@@ -24,7 +24,7 @@ const ProtectedRouteAdmin = ({ children }) => {
 
   // Si no es admin, redirigir al dashboard normal
   if (datosUsuario?.rol !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   // Si es admin, mostrar el contenido

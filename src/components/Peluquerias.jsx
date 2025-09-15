@@ -65,13 +65,13 @@ export default function Peluquerias({peluquerias, manejarAbrirFormularioPeluquer
                     <span className="text-yellow-500">⭐</span>
                     <span className="ml-1 text-sm font-medium">{peluqueria.calificacion}</span>
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                {/*   <div className="flex flex-wrap gap-1">
                     {peluqueria.servicios.map((servicio, index) => (
                       <span key={index} className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
                         {servicio}
                       </span>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="space-y-2">
                   <button 

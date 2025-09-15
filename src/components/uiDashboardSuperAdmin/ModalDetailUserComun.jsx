@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import UiLiquidacionesUserComun from './UiLiquidacionUserComun';
+import { getAllDataCollection } from '../../data/firebase/firebase';
 
 export default function ModalDetailUserComun({ 
   usuario, 
@@ -22,6 +23,35 @@ export default function ModalDetailUserComun({
     tipoMensualidad: usuario?.tipoMensualidad || false
   });
 
+
+  const [allChapitaUser, setAllChapitaUser] = useState([]);
+
+// Función para cargar pagos del usuario
+const getAllChapitasUsuario = async () => {
+  if (!usuario?.id) {
+    console.log('No hay usuario.id:', usuario);
+    return;
+  }
+  
+  console.log('Buscando pagos para usuario.id:', usuario.id);
+  try {
+    // Cargar pagos de chapitas
+    const chapitas = await getAllDataCollection('pagoChapita');
+    console.log('Todas las chapitas:', chapitas);
+    const chapitasUsuario = chapitas.filter(pago => pago.usuarioId === usuario.id);
+    console.log('Chapitas filtradas:', chapitasUsuario);
+    setAllChapitaUser(chapitasUsuario);
+  } catch (error) {
+    console.error('Error al cargar pagos:', error);
+  }
+};
+
+  useEffect(() => {
+    getAllChapitasUsuario();
+  }, [usuario?.id]);
+
+  console.log(allChapitaUser,'allChapitaUser');
+  
   // Si el modal no está abierto, no renderizar nada
   if (!isAbierto) return null;
 
@@ -95,7 +125,13 @@ export default function ModalDetailUserComun({
       tipoMensualidad: nuevaMensualidad
     }));
   };
+
+
   
+  
+  console.log(usuario,'usuario');
+  
+
   return (
     <div className="fixed h-screen w-screen inset-0 z-50 overflow-y-auto">
       {/* Overlay */}
@@ -346,6 +382,8 @@ export default function ModalDetailUserComun({
                 </div>
               </div>
             </div>
+
+            {/* Sección de Chapitas */}
 
             {/* Sección de Mascotas */}
             {usuario.infoMascotas && usuario.infoMascotas.length > 0 && (

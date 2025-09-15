@@ -8,10 +8,13 @@ import GestionTienda from './GestionTienda';
 import { ImageUploaderProfesional } from './ImageUploaderProfesional';
 import DecoracionForm from './decoracionUi/DecoracionForm';
 import AddServicesProfecional from './dashboardProfesional/AddServicesProfecional';
+import { useTheme } from '../contexts/ThemeContext';
 
 // Este componente no recibe props
 const DashboardProfesional = () => {
   const navigate = useNavigate();
+  const { typeTheme } = useTheme();
+
   const { usuario, cerrarSesion, isCargandoLogout } = useAuth();
   const [datosProfesional, setDatosProfesional] = useState(null);
   const [isCargandoProfesional, setIsCargandoProfesional] = useState(false);
@@ -434,9 +437,13 @@ const DashboardProfesional = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
+    <div className={
+      typeTheme === 'light'
+        ? "bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 min-h-screen pt-16"
+        : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen pt-16"
+    }>
       {/* Fondo decorativo */}
-      <DecoracionForm />
+      <DecoracionForm isFullScreen={true} />
 
 
       {/* Navbar modular */}

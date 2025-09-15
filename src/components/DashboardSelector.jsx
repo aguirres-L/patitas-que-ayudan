@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Dashboard from './Dashboard';
+import DashboardAdmin from './DashboardAdmin';
 import DashboardSuperAdmin from './DashboardSuperAdmin';
  
 

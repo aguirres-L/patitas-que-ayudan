@@ -183,8 +183,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </svg>
         </button>
         {/* Menú links */}
-        <div className={`flex-col sm:flex-row sm:flex sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto ${typeTheme === 'dark' ? 'bg-gray-900/95' : 'bg-white/95'} backdrop-blur-sm shadow-lg sm:shadow-none z-[9999] transition-all duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
-         
+        <div className={`flex-col sm:flex-row sm:flex sm:space-y-0 sm:space-x-4 absolute sm:static top-20 left-0 w-full sm:w-auto ${typeTheme === 'dark' ? 'bg-gray-900/95 sm:bg-transparent' : 'bg-white/95 sm:bg-transparent'}  shadow-lg sm:shadow-none z-[9999] duration-300 ${menuAbierto ? 'flex' : 'hidden sm:flex'}`}>
+                                                                                                                                                                                                                                                                                                                                                
           {/* Enlace al dashboard admin para usuarios admin */}
           {datosUsuario?.rol === 'admin' && (
             <Link 

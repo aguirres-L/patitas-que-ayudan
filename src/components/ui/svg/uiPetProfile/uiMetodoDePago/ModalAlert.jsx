@@ -127,25 +127,25 @@ export default function ModalAlert({ typeAlert, mensaje, onCerrar }) {
                             <p className="text-sm font-medium text-gray-200">Gracias por tu pago. Te contactaremos pronto.</p>
                         </div>
                     </div>
-                    <button
+                   {/*  <button
                         onClick={onCerrar}
                         aria-label="Cerrar"
                         className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
                         >
                         x
-                    </button>
+                    </button> */}
                 </div>
                 <div className="p-6 bg-gray-800 bg-opacity-60">
                     <p className="text-gray-100">{mensaje?.mensaje || 'Gracias por tu pago. Te contactaremos pronto.'}</p>
                 </div>
-                <div className="flex justify-end gap-3 p-4 bg-gray-800 bg-opacity-60">
+               {/*  <div className="flex justify-end gap-3 p-4 bg-gray-800 bg-opacity-60">
                     <button
                         onClick={handleButton}
                         className="px-4 py-2 text-sm font-semibold text-white transition-colors rounded-lg bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
                     >
                         {mensaje?.from === 'suscripcion' ? 'Volver al home' : 'Volver al perfil'}
                     </button>
-                </div>
+                </div> */}
                 </div>
             </div>
         </div>

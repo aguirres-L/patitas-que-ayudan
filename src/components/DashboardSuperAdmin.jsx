@@ -344,11 +344,11 @@ const DashboardSuperAdmin = () => {
   return (
     <div className={
       typeTheme === 'light'
-        ? "min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 pt-16"
-        : "min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pt-16"
+        ? "bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 min-h-screen pt-16"
+          : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen pt-16"
     }>
       {/* Fondo decorativo */}
-      <DecoracionForm />
+      <DecoracionForm isFullScreen={true} />
 
 
       {/* Navbar modular */}

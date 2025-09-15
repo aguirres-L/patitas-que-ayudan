@@ -8,13 +8,14 @@ import { EditarMascota } from './EditarMascota';
 import typeProfesionalStore from '../service/zustand';
 import MetodoDePago from './metodoDePago/MetodoDePago';
 import DecoracionForm from './decoracionUi/DecoracionForm';
+import { useTheme } from '../contexts/ThemeContext';
 
 // Este componente recibe props a través de useParams
 const PetProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const {getTipoProfesional} = typeProfesionalStore();
-
+  const { typeTheme } = useTheme();
   const { usuario } = useAuth();
   const [pestañaActiva, setPestañaActiva] = useState('informacion');
   const [mascota, setMascota] = useState(null);
@@ -156,9 +157,13 @@ const PetProfile = () => {
 
 
   return (
-    <div className="h-full bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 pt-16">
+    <div className={
+      typeTheme === 'light'
+        ? "bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 min-h-screen pt-16"
+        : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen pt-16"
+    }>
       {/* Fondo decorativo - Responsivo */}
-      <DecoracionForm/> 
+      <DecoracionForm isFullScreen={true} />
 
       {/* Navbar modular */}
       <Navbar tipo="dashboard" />

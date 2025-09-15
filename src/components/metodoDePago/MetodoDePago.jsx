@@ -98,9 +98,9 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
       });
       
       // Cerrar modal después de un tiempo
-     /*  setTimeout(() => {
+      setTimeout(() => {
         onCerrar();
-      }, 3000); */
+      }, 4000);
     } catch (error) {
       console.log(error,'error');
       
@@ -211,7 +211,7 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
           {isProcesando ? (
             <div className="flex items-center justify-center space-x-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Procesando...</span>
+              <span>Enviando Datos...</span>
             </div>
           ) : (
             ` ${metodoSeleccionado === 'transferencia' ? 'Continuar' : 'En Construcción'} `
