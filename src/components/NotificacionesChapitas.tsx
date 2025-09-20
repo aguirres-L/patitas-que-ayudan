@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { obtenerUsuarioPorUid } from '../data/firebase/firebase';
+import { getAllDataCollection } from '../data/firebase/firebase';
 
 export interface NotificacionChapita {
   id: string;
   nombreMascota: string;
-  estado: boolean;
+  estado: string;
   fechaActualizacion: string;
   fotoUrl?: string;
+  usuarioId: string;
 }
 
 export interface NotificacionesChapitasProps {
@@ -43,6 +44,38 @@ export const NotificacionesChapitas: React.FC<NotificacionesChapitasProps> = ({
     };
   }, [isAbierto, onCerrar]);
 
+  // Función para cargar chapitas del usuario (reutilizada de ModalDetailUserComun)
+  const getAllChapitasUsuario = async () => {
+    if (!usuario?.uid) {
+      console.log('No hay usuario.uid:', usuario);
+      return;
+    }
+    
+    console.log('Buscando pagos para usuario.uid:', usuario.uid);
+    try {
+      // Cargar pagos de chapitas
+      const chapitas = await getAllDataCollection('pagoChapita');
+      console.log('Todas las chapitas:', chapitas);
+      const chapitasUsuario = chapitas.filter(pago => pago.usuarioId === usuario.uid);
+      console.log('Chapitas filtradas:', chapitasUsuario);
+      
+      // Transformar datos para el formato de notificaciones
+      const notificacionesChapitas = chapitasUsuario.map(chapita => ({
+        id: chapita.id,
+        nombreMascota: chapita.mascotaNombre || 'Mascota sin nombre',
+        estado: chapita.estado || 'sin estado',
+        fechaActualizacion: chapita.fechaActualizacion?.toDate?.()?.toISOString() || new Date().toISOString(),
+        fotoUrl: chapita.fotoMascota,
+        usuarioId: chapita.usuarioId
+      }))
+      .sort((a, b) => new Date(b.fechaActualizacion).getTime() - new Date(a.fechaActualizacion).getTime());
+
+      setNotificaciones(notificacionesChapitas);
+    } catch (error) {
+      console.error('Error al cargar pagos:', error);
+    }
+  };
+
   // Cargar notificaciones de chapitas
   useEffect(() => {
     const cargarNotificaciones = async () => {
@@ -50,22 +83,7 @@ export const NotificacionesChapitas: React.FC<NotificacionesChapitasProps> = ({
 
       try {
         setIsCargando(true);
-        const datosUsuario = await obtenerUsuarioPorUid(usuario.uid);
-        
-        if (datosUsuario?.infoMascotas) {
-          const notificacionesChapitas = datosUsuario.infoMascotas
-            .filter(mascota => mascota.estadoChapita !== undefined)
-            .map(mascota => ({
-              id: mascota.id,
-              nombreMascota: mascota.nombre,
-              estado: mascota.estadoChapita,
-              fechaActualizacion: mascota.fechaActualizacionChapita || new Date().toISOString(),
-              fotoUrl: mascota.fotoUrl
-            }))
-            .sort((a, b) => new Date(b.fechaActualizacion).getTime() - new Date(a.fechaActualizacion).getTime());
-
-          setNotificaciones(notificacionesChapitas);
-        }
+        await getAllChapitasUsuario();
       } catch (error) {
         console.error('Error al cargar notificaciones:', error);
       } finally {
@@ -163,15 +181,19 @@ export const NotificacionesChapitas: React.FC<NotificacionesChapitasProps> = ({
                   
                   <div className="flex items-center mt-1">
                     <div className={`w-2 h-2 rounded-full mr-2 ${
-                      notificacion.estado ? 'bg-yellow-500' : 'bg-green-500'
+                      notificacion.estado === 'pendiente' ? 'bg-yellow-500' : 
+                      notificacion.estado === 'aprobado' ? 'bg-green-500' :
+                      notificacion.estado === 'rechazado' ? 'bg-red-500' : 'bg-gray-500'
                     }`}></div>
                     <p className={`text-xs ${
                       typeTheme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                     }`}>
-                      {notificacion.estado 
-                        ? 'Chapita en producción' 
-                        : 'Chapita disponible'
-                      }
+                      {notificacion.estado === 'pendiente' ? 'Chapita pendiente' :
+                       notificacion.estado === 'aprobado' ? 'Chapita aprobada' :
+                       notificacion.estado === 'rechazado' ? 'Chapita rechazada' :
+                       notificacion.estado === 'en_produccion' ? 'Chapita en producción' :
+                       notificacion.estado === 'disponible' ? 'Chapita disponible' :
+                       `Estado: ${notificacion.estado}`}
                     </p>
                   </div>
                 </div>

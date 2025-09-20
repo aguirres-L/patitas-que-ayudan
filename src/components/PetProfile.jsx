@@ -479,6 +479,8 @@ const PetProfile = () => {
               </div>
               <MetodoDePago 
                 mascotaNombre={mascota.nombre}
+                mascotaId={mascota.id}
+                mascotaFoto={mascota.fotoUrl}
                 monto={5000} // Puedes hacer esto dinámico
                 onCerrar={() => setOpenMetodoPago(false)}
               />

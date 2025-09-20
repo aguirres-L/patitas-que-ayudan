@@ -7,7 +7,7 @@ import { addDataCollection } from '../../data/firebase';
 import { CONFIG_PAGOS } from '../../data/firebase/config_Pagos/datosPagos';
 
 
-export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) {
+export default function MetodoDePago({ mascotaNombre, mascotaFoto, mascotaId, monto = 7000, onCerrar }) {
   const { usuario } = useAuth();
 
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
   const [isPasosTranferencia, setIsPasosTranferencia] = useState(false);
   const [isTransferenciaConfirmada, setIsTransferenciaConfirmada] = useState(false);
   // ... existing validation and formatting functions ...
-
+console.log(mascotaId,'mascotaId');
 
   const procesarPago = async (pago) => {
   // para cuando se use pago con tajeta , usar mercado pago   console.log(pago,'pago');
@@ -62,7 +62,6 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
       // Aquí iría la lógica real de Mercado Pago
       // Por ahora simulamos el proceso
       await new Promise(resolve => setTimeout(resolve, 2000));
-
         // Datos completos del pago
     const datosDelPago = {
       usuarioId: usuario.uid,
@@ -73,6 +72,8 @@ export default function MetodoDePago({ mascotaNombre, monto = 7000, onCerrar }) 
       metodoPago: metodoSeleccionado,
       estado: 'pendiente', // pendiente, confirmado, rechazado
       fechaPago: new Date(),
+      fotoMascota: mascotaFoto,
+      mascotaId: mascotaId,
       // Para transferencias, podrías agregar:
       ...(metodoSeleccionado === 'transferencia' && {
         cbuDestino: CONFIG_PAGOS.CBU_CUENTA,

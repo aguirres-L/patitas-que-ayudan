@@ -1210,4 +1210,23 @@ export const obtenerServicioPorId = async (profesionalId, servicioId) => {
   }
 };
 
+/**
+ * Actualiza el estado de una chapita específica
+ * @param {string} chapitaId - ID de la chapita
+ * @param {string} nuevoEstado - Nuevo estado ('pendiente', 'fabricacion', 'en viaje', 'entregado')
+ * @returns {Promise<void>}
+ */
+export const actualizarEstadoChapita = async (chapitaId, nuevoEstado) => {
+  try {
+    await updateDataCollection('pagoChapita', chapitaId, {
+      estado: nuevoEstado,
+      fechaActualizacion: new Date()
+    });
+    console.log(`Estado de chapita ${chapitaId} actualizado a: ${nuevoEstado}`);
+  } catch (error) {
+    console.error('Error al actualizar estado de chapita:', error);
+    throw error;
+  }
+};
+
 // ... existing code ...
